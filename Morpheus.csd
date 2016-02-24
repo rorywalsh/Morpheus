@@ -1,14 +1,14 @@
 <Cabbage>
 form size(700,695), caption(""), pluginID("plu1"), colour("white")
 
-
 csoundoutput bounds(0, 500, 700, 200)
 ;plant to hold listbox for known rows. Easier to mane when it's a plant
 image bounds(37, 23, 484, 268), colour(90, 90, 90), plant("listbox"), identchannel("listbox"), visible(0), {
 	listbox bounds(2, 2, 478, 262), channel("rowListbox"), file("classicRows.txt"), value(-1), align("left"), highlightcolour(200, 200, 0)
 }
 
-;plant to hold array of labels for displaying our matrix.  
+;plant to hold array of
+ labels for displaying our matrix.  
 image bounds(37, 23, 484, 268), colour(90, 90, 90), plant("matrix"), identchannel("matrix"), visible(1), {
 	label bounds(280, 30, 38, 20), widgetarray("note", 144), colour("white"), fontcolour("black"), text(""), corners(0), colour("black")
 }
@@ -88,6 +88,7 @@ gSCSharp[] init 12
 gSCFlat[] init 12
 gSCPc[] init 12
 gSCPct[] init 12
+gSRows[] init 4
 giProb init 0
 giSpelling init 0
 giSequencerCount init 0
@@ -148,7 +149,7 @@ else										;if instrument is in normal mode
 		SChannel sprintf "note_ident%d", giNoteCount+12*(giNoteCount-1)
 		SMessage sprintf "text(\"%s\")", getTextFromArray(iCurH, getSpelling:i())
 		chnset SMessage, SChannel
-		NormalOrder
+		normalOrder()
 		; ------- calculating row names for P,I,R and RI--------
 		if giNoteCount==1 then
 								;p	i	index
@@ -281,7 +282,7 @@ instr 1000	;position all our numberboxes and create global arrays
 		chnset S1, S2
 		iCnt=iCnt+1
 	enduntil			
-				
+				 
 	iCnt = 0
 	until iCnt ==12 do
 		S1 sprintfk "pos(0, %d)", iCnt*22
@@ -289,57 +290,8 @@ instr 1000	;position all our numberboxes and create global arrays
 		chnset S1, S2
 		iCnt=iCnt+1
 	enduntil				
-	gSCSharp[0] = "C"
-	gSCSharp[1] = "C#"
-	gSCSharp[2] = "D"
-	gSCSharp[3] = "D#"
-	gSCSharp[4] = "E"
-	gSCSharp[5] = "F"
-	gSCSharp[6] = "F#"
-	gSCSharp[7] = "G"
-	gSCSharp[8] = "G#"
-	gSCSharp[9] = "A"
-	gSCSharp[10] = "A#"
-	gSCSharp[11] = "B"
 	
-	gSCFlat[0] = "C"
-	gSCFlat[1] = "Db"
-	gSCFlat[2] = "D"
-	gSCFlat[3] = "Eb"
-	gSCFlat[4] = "E"
-	gSCFlat[5] = "F"
-	gSCFlat[6] = "Gb"
-	gSCFlat[7] = "G"
-	gSCFlat[8] = "Ab"
-	gSCFlat[9] = "A"
-	gSCFlat[10] = "Bb"
-	gSCFlat[11] = "B" 	
-	
-	gSCPct[0] = "0"
-	gSCPct[1] = "1"
-	gSCPct[2] = "2"
-	gSCPct[3] = "3"
-	gSCPct[4] = "4"
-	gSCPct[5] = "5"
-	gSCPct[6] = "6"
-	gSCPct[7] = "7"
-	gSCPct[8] = "8"
-	gSCPct[9] = "9"
-	gSCPct[10] = "e"
-	gSCPct[11] = "t"
-	
-	gSCPc[0] = "0"
-	gSCPc[1] = "1"
-	gSCPc[2] = "2"
-	gSCPc[3] = "3"
-	gSCPc[4] = "4"
-	gSCPc[5] = "5"
-	gSCPc[6] = "6"
-	gSCPc[7] = "7"
-	gSCPc[8] = "8"
-	gSCPc[9] = "9"
-	gSCPc[10] = "10"
-	gSCPc[11] = "11"				
+	initialiseStringArrays()			
 endin
 
 ;-------------------------------------------
@@ -348,6 +300,7 @@ instr 1001
 
 	kNoteCount = giNoteCount; 	cast to kRate for checking later...
 
+	;we don't need this running so fast, it's a waste of CPU...
 	if metro(5)==1 then
 		kIndex = 0
 		until kIndex==144 do
@@ -359,7 +312,19 @@ instr 1001
 			gkLabelsTemp[kIndex] = gkLabels[kIndex]
 		    kIndex = kIndex+1
 		enduntil
+		
+;		kIndex = 0
+;		kCnt = 0 
+;		
+;		until kCnt==4 do
+;			until 
+;		
+;		kCnt+=1
+;		enduntil
+		
 	endif
+
+
 
 	if changed:k(chnget:k("rand"))==1 then
 		if kNoteCount == 12 then	

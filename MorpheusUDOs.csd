@@ -360,7 +360,7 @@ opcode nameRowsAndColumns, 0, iii
 	chnset SMessage, SChannel	
 endop			
 
-opcode NormalOrder,0,0
+opcode normalOrder,0,0
  	iTemp[] init 12
  	iTemp_Out[] init giNoteCount
  	iCnt init 0
@@ -417,4 +417,59 @@ opcode NormalOrder,0,0
  	od
  	 prints "%d %d %d %d %d\n", iTemp_Out[0], iTemp_Out[1], iTemp_Out[2], iTemp_Out[3], iTemp_Out[4]
 	 
+endop
+
+opcode initialiseStringArrays, 0, 0
+	gSCSharp[0] = "C"
+	gSCSharp[1] = "C#"
+	gSCSharp[2] = "D"
+	gSCSharp[3] = "D#"
+	gSCSharp[4] = "E"
+	gSCSharp[5] = "F"
+	gSCSharp[6] = "F#"
+	gSCSharp[7] = "G"
+	gSCSharp[8] = "G#"
+	gSCSharp[9] = "A"
+	gSCSharp[10] = "A#"
+	gSCSharp[11] = "B"
+	
+	gSCFlat[0] = "C"
+	gSCFlat[1] = "Db"
+	gSCFlat[2] = "D"
+	gSCFlat[3] = "Eb"
+	gSCFlat[4] = "E"
+	gSCFlat[5] = "F"
+	gSCFlat[6] = "Gb"
+	gSCFlat[7] = "G"
+	gSCFlat[8] = "Ab"
+	gSCFlat[9] = "A"
+	gSCFlat[10] = "Bb"
+	gSCFlat[11] = "B" 	
+	
+	gSCPct[0] = "0"
+	gSCPct[1] = "1"
+	gSCPct[2] = "2"
+	gSCPct[3] = "3"
+	gSCPct[4] = "4"
+	gSCPct[5] = "5"
+	gSCPct[6] = "6"
+	gSCPct[7] = "7"
+	gSCPct[8] = "8"
+	gSCPct[9] = "9"
+	gSCPct[10] = "e"
+	gSCPct[11] = "t"
+	
+	gSCPc[0] = "0"
+	gSCPc[1] = "1"
+	gSCPc[2] = "2"
+	gSCPc[3] = "3"
+	gSCPc[4] = "4"
+	gSCPc[5] = "5"
+	gSCPc[6] = "6"
+	gSCPc[7] = "7"
+	gSCPc[8] = "8"
+	gSCPc[9] = "9"
+	gSCPc[10] = "10"
+	gSCPc[11] = "11"
+
 endop
