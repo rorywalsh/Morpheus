@@ -1,8 +1,8 @@
 <Cabbage>
-form size(700, 480), caption(""), pluginID("plu1"), colour("white")
+form size(700, 780), caption(""), pluginID("plu1"), colour("white")
 
 
-
+csoundoutput bounds(0, 500, 700, 200)
 ;plant to hold listbox for known rows. Easier to mane when it's a plant
 image bounds(37, 23, 484, 268), colour(90, 90, 90), plant("listbox"), identchannel("listbox"), visible(0), {
 	listbox bounds(2, 2, 478, 262), channel("rowListbox"), file("classicRows.txt"), value(-1), align("left"), highlightcolour(200, 200, 0)
@@ -66,10 +66,12 @@ label bounds(514, 340, 151, 17), text("[0 0 0 0 0 0]"), identchannel("intervalcl
 
 
 
+checkbox bounds(504, 368, 120, 20), channel("sequencerMode"), fontcolour("black"), text("Sequencer"), value(0)
+combobox bounds(608, 368, 60, 22), channel("octaveRange"), items("C1", "C2", "C3", "C4", "C5", "C6"), value(3)
 </Cabbage> 
 <CsoundSynthesizer>
 <CsOptions>
--n -d -+rtmidi=NULL -M0 -m0d --midi-key=4
+-dm0 -n -+rtmidi=null -M0 -Q0 --midi-key=4 --midi-velocity-amp=5
 </CsOptions>
 <CsInstruments>
 sr = 44100
@@ -77,7 +79,7 @@ ksmps = 64
 nchnls = 2
 0dbfs=1
   
-;RoryWalsh & GlebRogozinsky 2016  
+;Rory Walsh & Gleb Rogozinsky 2016  
 
 #define COL #0#
 #define ROW #1#
@@ -88,6 +90,7 @@ gSCPc[] init 12
 gSCPct[] init 12
 giProb init 0
 giSpelling init 0
+giSequencerCount init 0
 giMax init -1
 giMatrix[][] init 12,12 
 
@@ -102,13 +105,17 @@ giIC[] init 6
 giSearchArray[] fillarray -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 giSearchCount init 0
 
+;includes various utility UDOS
 #include "MorpheusUDOs.csd"
+
+massign 0, 100
 ;================================================
 ; gets triggered each time a note is pressed
 ;================================================
-instr 1
+instr 100
 
-if chnget:i("search")==1 then
+if chnget:i("search")==1 then				;if instrument is in search mode
+
 	iGoSearch isAlreadyThereSimple p4%12, giSearchArray
 	if iGoSearch==0 then
 		giSearchArray[giSearchCount] = p4%12
@@ -117,10 +124,18 @@ if chnget:i("search")==1 then
 		chnset SMessage, SChannel 
 		
 		giSearchCount = giSearchCount+1
-
+ 
 		event_i "i", "SearchMatrixForRow", 0, 1
 	endif
-else
+	
+elseif chnget:i("sequencerMode")==1	then	;if instrument is in sequencer mode
+		;proof of concept more than anything else...
+		prints "NoteOn"
+		iOctave = chnget:i("octaveRange");
+		iNote = giNoteArray[giSequencerCount%12]+iOctave+2*12
+		noteondur 1, iNote, 100, 1000
+		giSequencerCount+=1
+else										;if instrument is in normal mode
 
 	iGo isAlreadyThere p4 
 	if iGo==0 then
@@ -211,9 +226,6 @@ else
 	
 endif	
 endin
-
-
-
 
 ;============================================================
 ; utility instruments for controlling aspects of the GUI
