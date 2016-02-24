@@ -1,5 +1,5 @@
 <Cabbage>
-form size(700, 780), caption(""), pluginID("plu1"), colour("white")
+form size(700,695), caption(""), pluginID("plu1"), colour("white")
 
 
 csoundoutput bounds(0, 500, 700, 200)
