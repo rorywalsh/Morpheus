@@ -98,8 +98,14 @@ giMatrix[][] init 12,12
 gkLabels[] init 144
 gkLabelsTemp[] init 144
 
-gkRowLabels[] init 48
-gkRowLabelsTemp[] init 48
+gkPLabelsTemp[] init 12
+gkPLabels[] init 12
+gkRLabelsTemp[] init 12
+gkRLabels[] init 12
+gkRILabelsTemp[] init 12
+gkRILabels[] init 12
+gkILabelsTemp[] init 12
+gkILabels[] init 12
 
 giDisplayMatrix[][] init 24, 24
 giNoteCount init 0;
@@ -255,9 +261,15 @@ instr 1000	;position all our numberboxes and create global arrays
 	enduntil
 
 	iCnt = 0
-	until iCnt == 48 do
-		gkRowLabelsTemp[iCnt] = 0
-		gkRowLabels[iCnt] = 0
+	until iCnt == 12 do
+		gkPLabelsTemp[iCnt] = 0
+		gkPLabels[iCnt] = 0
+		gkRLabelsTemp[iCnt] = 0
+		gkRLabels[iCnt] = 0
+		gkRILabelsTemp[iCnt] = 0
+		gkRILabels[iCnt] = 0
+		gkILabelsTemp[iCnt] = 0
+		gkILabels[iCnt] = 0
 	iCnt+=1
 	enduntil
 		
@@ -309,44 +321,7 @@ endin
 instr 1001
 
 	kNoteCount = giNoteCount; 	cast to kRate for checking later...
-
-	;printk2 chnget:k("primeLabels1")
-
 	;we don't need this running so fast, it's a waste of CPU...
-	if metro(.5)==1 then
-		kIndex = 0
-		until kIndex==144 do
-		    gkLabels[kIndex] chnget sprintfk("note%d", kIndex+1)
-		    if gkLabels[kIndex] != gkLabelsTemp[kIndex] then
-		    	printks "%d %d\n", .1, int(kIndex/12), kIndex%12
-				event "i", "ColourRowAndColumn", 0, 1, int(kIndex/12), kIndex%12
-		    endif
-			gkLabelsTemp[kIndex] = gkLabels[kIndex]
-		    kIndex = kIndex+1
-		enduntil 
-		
-		kIndex = 0 
-		kCnt = 0  
-		
-		until kCnt==4 do
-			until kIndex==12 do
-			SChannel sprintfk "%s%d", gSRowNames[kCnt], kIndex+1
-			;printks SChannel, 0
-			gkRowLabels[kIndex+(kIndex*kCnt)] chnget SChannel
-			if gkRowLabels[kIndex+(kIndex*kCnt)] != gkRowLabelsTemp[kIndex+(kIndex*kCnt)] then
-				printks SChannel, 0
-			endif
-			gkRowLabelsTemp[kIndex+(kIndex*kCnt)] = gkRowLabels[kIndex+(kIndex*kCnt)]
-			kIndex+=1
-			enduntil
-		kIndex=0
-		kCnt+=1 
-		enduntil
-		
-	endif
-
-
-
 	if changed:k(chnget:k("rand"))==1 then
 		if kNoteCount == 12 then	
 				scoreline {{i"DisplayNotice"  0  100  "The row is completed. Try delete some cells or reset" 5}}, 1
@@ -440,6 +415,60 @@ instr 1001
 	
 endin
 
+instr 1002 ;check for clicks on labels...
+	if metro(.5)==1 then
+		kIndex = 0
+		until kIndex==144 do
+		    gkLabels[kIndex] chnget sprintfk("note%d", kIndex+1)
+		    if gkLabels[kIndex] != gkLabelsTemp[kIndex] then
+		    	printks "%d %d\n", .1, int(kIndex/12), kIndex%12
+				event "i", "ColourRowAndColumn", 0, 1, int(kIndex/12), kIndex%12
+		    endif
+			gkLabelsTemp[kIndex] = gkLabels[kIndex]
+		    kIndex = kIndex+1
+		enduntil 
+		
+		kIndex = 0 	
+		until kIndex==12 do
+			gkPLabels[kIndex] chnget sprintfk("primeLabels%d", kIndex+1)
+			if gkPLabels[kIndex] != gkPLabelsTemp[kIndex] then
+				printks sprintfk("primeLabels%d", kIndex+1), 0
+			endif
+			gkPLabelsTemp[kIndex] = gkPLabels[kIndex]
+			kIndex+=1
+		enduntil
+
+		kIndex = 0 	
+		until kIndex==12 do
+			gkRLabels[kIndex] chnget sprintfk("retroLabels%d", kIndex+1)
+			if gkRLabels[kIndex] != gkRLabelsTemp[kIndex] then
+				printks sprintfk("retroLabels%d", kIndex+1), 0
+			endif
+			gkRLabelsTemp[kIndex] = gkRLabels[kIndex]
+			kIndex+=1
+		enduntil
+		
+		kIndex = 0 	
+		until kIndex==12 do
+			gkILabels[kIndex] chnget sprintfk("inverseLabels%d", kIndex+1)
+			if gkILabels[kIndex] != gkILabelsTemp[kIndex] then
+				printks sprintfk("inverseLabels%d", kIndex+1), 0
+			endif
+			gkILabelsTemp[kIndex] = gkILabels[kIndex]
+			kIndex+=1
+		enduntil
+
+		kIndex = 0 	
+		until kIndex==12 do
+			gkRILabels[kIndex] chnget sprintfk("retroInverseLabels%d", kIndex+1)
+			if gkRILabels[kIndex] != gkRILabelsTemp[kIndex] then
+				printks sprintfk("retroInverseLabels%d", kIndex+1), 0
+			endif
+			gkRILabelsTemp[kIndex] = gkRILabels[kIndex]
+			kIndex+=1
+		enduntil			
+	endif
+endin
 ;-------------------------------------------
 ; shows the main matrix hides the listbox
 instr ColourRowAndColumn
@@ -828,6 +857,7 @@ endin
 <CsScore>
 i1000 0 1 
 i1001 0 10000 
+i1002 0 10000
 f0 z
 </CsScore>
 </CsoundSynthesizer> 
