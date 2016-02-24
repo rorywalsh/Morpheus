@@ -88,7 +88,7 @@ gSCSharp[] init 12
 gSCFlat[] init 12
 gSCPc[] init 12
 gSCPct[] init 12
-gSRows[] init 4
+gSRowNames[] init 4
 giProb init 0
 giSpelling init 0
 giSequencerCount init 0
@@ -97,6 +97,9 @@ giMatrix[][] init 12,12
 
 gkLabels[] init 144
 gkLabelsTemp[] init 144
+
+gkRowLabels[] init 48
+gkRowLabelsTemp[] init 48
 
 giDisplayMatrix[][] init 24, 24
 giNoteCount init 0;
@@ -242,7 +245,7 @@ instr 1000	;position all our numberboxes and create global arrays
 			iGrayScale = (iCnt%2==0 ? 255 : 220)
 		endif
 		S1 sprintfk "pos(%d, %d) colour(%d, %d, %d)", iCnt%12*40+2, iCntRows*22+2, iGrayScale, iGrayScale, iGrayScale
-		S2 sprintfk "note_ident%d", iCnt+1
+		S2 sprintfk "note_ident%d", iCnt+1 
 		chnset S1, S2
 		S3 sprintfk "note%d", iCnt+1
 		chnset 0, S3
@@ -251,6 +254,13 @@ instr 1000	;position all our numberboxes and create global arrays
 		iCntRows = (iCnt%12==0 ? iCntRows+1 : iCntRows)
 	enduntil
 
+	iCnt = 0
+	until iCnt == 48 do
+		gkRowLabelsTemp[iCnt] = 0
+		gkRowLabels[iCnt] = 0
+	iCnt+=1
+	enduntil
+		
 	iCnt = 0
 	until iCnt ==12 do
 		S1 sprintfk "pos(%d, 25)", iCnt*40+5
@@ -300,8 +310,10 @@ instr 1001
 
 	kNoteCount = giNoteCount; 	cast to kRate for checking later...
 
+	;printk2 chnget:k("primeLabels1")
+
 	;we don't need this running so fast, it's a waste of CPU...
-	if metro(5)==1 then
+	if metro(.5)==1 then
 		kIndex = 0
 		until kIndex==144 do
 		    gkLabels[kIndex] chnget sprintfk("note%d", kIndex+1)
@@ -311,16 +323,25 @@ instr 1001
 		    endif
 			gkLabelsTemp[kIndex] = gkLabels[kIndex]
 		    kIndex = kIndex+1
-		enduntil
+		enduntil 
 		
-;		kIndex = 0
-;		kCnt = 0 
-;		
-;		until kCnt==4 do
-;			until 
-;		
-;		kCnt+=1
-;		enduntil
+		kIndex = 0 
+		kCnt = 0  
+		
+		until kCnt==4 do
+			until kIndex==12 do
+			SChannel sprintfk "%s%d", gSRowNames[kCnt], kIndex+1
+			;printks SChannel, 0
+			gkRowLabels[kIndex+(kIndex*kCnt)] chnget SChannel
+			if gkRowLabels[kIndex+(kIndex*kCnt)] != gkRowLabelsTemp[kIndex+(kIndex*kCnt)] then
+				printks SChannel, 0
+			endif
+			gkRowLabelsTemp[kIndex+(kIndex*kCnt)] = gkRowLabels[kIndex+(kIndex*kCnt)]
+			kIndex+=1
+			enduntil
+		kIndex=0
+		kCnt+=1 
+		enduntil
 		
 	endif
 

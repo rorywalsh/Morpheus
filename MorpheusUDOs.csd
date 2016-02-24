@@ -472,4 +472,8 @@ opcode initialiseStringArrays, 0, 0
 	gSCPc[10] = "10"
 	gSCPc[11] = "11"
 
+	gSRowNames[0] = "primeLabels"
+	gSRowNames[1] = "inverseLabels"
+	gSRowNames[2] = "retroLabels"
+	gSRowNames[3] = "retroInverseLabels"
 endop
