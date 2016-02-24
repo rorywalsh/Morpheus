@@ -64,6 +64,10 @@ keyboard bounds(40, 312, 460, 79)
 groupbox bounds(504, 312, 170, 51) text("Interval Class"), colour("black"), fontcolour("white"), colour("White")
 label bounds(514, 340, 151, 17), text("[0 0 0 0 0 0]"), identchannel("intervalclass")
 
+button bounds(50, 400, 20, 20), channel("RotInc"), text("R"), popuptext("Rotate a row to the right")
+button bounds(30, 400, 20, 20), channel("RotDec"), text("L"), popuptext("Rotate a row to the left")
+button bounds(50, 420, 20, 20), channel("RotIncS"), text("+"), popuptext("Stravinsky Right Rotation")
+button bounds(30, 420, 20, 20), channel("RotDecS"), text("-"), popuptext("Stravinsky Right Rotation")
 
 
 checkbox bounds(504, 368, 120, 20), channel("sequencerMode"), fontcolour("black"), text("Sequencer"), value(0)
@@ -434,10 +438,97 @@ instr 1001
 		event "i", "RandRow", 0, 1
 		event "i", "ShowMatrix", 0, 1
 	endif
-	
+
+	if changed:k(chnget:k("RotInc"))==1 then
+		event "i", "RotationRight", 0, 1, 0 	
+	endif
+	if changed:k(chnget:k("RotDec"))==1 then
+		event "i", "RotationLeft", 0, 1, 0	
+	endif
+	if changed:k(chnget:k("RotIncS"))==1 then
+		event "i", "RotationRight", 0, 1, 1 	
+	endif
+	if changed:k(chnget:k("RotDecS"))==1 then
+		event "i", "RotationLeft", 0, 1, 1 	
+	endif
+		
 endin
 
+instr RotationRight
+	iCnt init giNoteCount-1
+	iCntV init 0
+	iCntH init 0
+	iTemp = giNoteArray[iCnt]
+	iSt init 0
+	
+	if p4 == 1 then
+		iSt = giNoteArray[0]
+	endif
+	
+	until iCnt == 0 do
+		giNoteArray[iCnt] = giNoteArray[iCnt-1]
+		iCnt -= 1
+	od
+	giNoteArray[0] = iTemp
+	
+	if p4 == 1 then
+		iDif = iTemp - iSt
+		iCnt = 0
+		until iCnt == giNoteCount do
+			iTemp = giNoteArray[iCnt] - iDif
+			iTemp wrap iTemp,0,12
+			giNoteArray[iCnt] = iTemp
+			iCnt += 1
+		od	
+	endif
+	
+	prints "%d %d %d", giNoteArray[0], giNoteArray[1], giNoteArray[2]	
 
+;	iLocalNoteArray[] = giNoteArray
+;	giNoteCountLoc = giNoteCount
+;	giNoteCount = 0
+;	iCnt = 0
+;	while iCnt < giNoteCountLoc do
+	 ;	prints "%d ", iLocalNoteArray[iCnt]
+;		event_i "i", 1, iCnt*.01, .1, iLocalNoteArray[iCnt]
+;		iCnt += 1
+;	od		
+;	event "i", "ChangeSpelling", 0, 1, 0
+endin
+
+instr RotationLeft
+	iCnt init 0
+	iTemp = giNoteArray[0]
+	
+	until iCnt == giNoteCount-1 do
+		giNoteArray[iCnt] = giNoteArray[iCnt+1]
+		iCnt += 1
+	od
+	giNoteArray[iCnt] = iTemp
+	
+	if p4 == 1 then
+		iDif = giNoteArray[0] - iTemp
+		iCnt = 0
+		until iCnt == giNoteCount do
+			iTemp = giNoteArray[iCnt] - iDif
+			iTemp wrap iTemp,0,12
+			giNoteArray[iCnt] = iTemp
+			iCnt += 1
+		od	
+	endif
+	
+;	iLocalNoteArray[] = giNoteArray
+;	giNoteCountLoc = giNoteCount
+;	giNoteCount = 0
+;	iCnt = 0
+;	while iCnt < giNoteCountLoc do
+	 ;	prints "%d ", iLocalNoteArray[iCnt]
+;		event_i "i", 1, iCnt*.01, .1, iLocalNoteArray[iCnt]
+;		iCnt += 1
+;	od
+	prints "%d %d %d", giNoteArray[0], giNoteArray[1], giNoteArray[2]
+	;event "i", "ChangeSpelling", 0, 1, 0
+endin
 ;----------------------------------------
 ;check for clicks on labels...
 instr 1002 
