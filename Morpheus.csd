@@ -43,8 +43,8 @@ image bounds(32, 304, 647, 95), colour(200, 200, 200)
                                            
 button bounds(576, 24, 95, 20), channel("resetRow"), text("Reset Matrix"), popuptext("Reset matrix back to blank state")
 button bounds(576, 72, 95, 20), channel("rand"), text("Randon Row"), popuptext("Fill matrix with random values")
-button bounds(576, 48, 95, 20), channel("resetSearch"), text("Reset Search"), popuptext("Clear search pattern")
-button bounds(576, 272, 95, 20), channel("norm"), text("Norm"), popuptext("Normalises matrix - sets first note in row to 0 and scales all other notes accordingly")
+button bounds(576, 48, 95, 20), channel("search"), text("Search Matrix", "Reset Search"), colour:1("green"), popuptext("Enable searching of matrix for a particular pattern")
+
 
 
 label bounds(32, -456, 445, 14), colour("black"), visible(0), fontcolour("lime"), text(""), bold(0), identchannel("outputMessage")
@@ -55,15 +55,15 @@ groupbox bounds(568, 120, 106, 51) text("Spelling"), fontcolour("black"), colour
 combobox bounds(576, 144, 92, 24), channel("spellingCombo"), items("Sharps", "Flats", "10", "t"), value(3), popuptext("Change harmonic spelling of notes")
 groupbox bounds(568, 168, 106, 55) text("Permutations"), fontcolour("black"), colour("White")
 combobox bounds(576, 192, 92, 24), channel("permutationsCombo"), items("Select", "Original", "O x E", "O1 x O2", "Over 5", "Over 7","R[Tri]","R[Tetr]")
-groupbox bounds(568, 216, 106, 52) text("Modulation"), fontcolour("black"), colour("White")
+groupbox bounds(568, 216, 106, 80) text("Modulation"), fontcolour("black"), colour("White")
 combobox bounds(576, 240, 92, 24), channel("modulationsCombo"), items("Select", "Original", "M5", "M7", "M11"), popuptext("Transposes each note by a set interval")
 button bounds(576, 96, 95, 20), channel("classicRows"), text("Classic Rows", "Show Matrix"), value(0), popuptext("Shows a list of iconic rows used in various 12-tone compositions")
-
+button bounds(576, 272, 95, 20), channel("norm"), text("Norm"), popuptext("Normalises matrix - sets first note in row to 0 and scales all other notes accordingly")
 keyboard bounds(40, 312, 460, 79)
 
-groupbox bounds(504, 312, 170, 81) text("Interval Class"), colour("black"), fontcolour("white"), colour("White")
-label bounds(520, 336, 151, 17), text("[0 0 0 0 0 0]"), identchannel("intervalclass")
-checkbox bounds(520, 360, 125, 20), channel("search"), fontcolour("white"), text("Search Matrix"), popuptext("Enable searched of matrix for a particular pattern")
+groupbox bounds(504, 312, 170, 51) text("Interval Class"), colour("black"), fontcolour("white"), colour("White")
+label bounds(514, 340, 151, 17), text("[0 0 0 0 0 0]"), identchannel("intervalclass")
+
 
 
 </Cabbage> 
@@ -392,9 +392,11 @@ instr 1001
 				scoreline {{i"DisplayNotice"  0  100  "Please fill a full row before enabling search" 5}}, 1
 			else
 				chnset "visible(1)", "searchNotesPlant"
+				event "i", "ResetSearch", 0, 1
 			endif
 		else
 			chnset "visible(0)", "searchNotesPlant"
+
 		endif
 	endif
 	
@@ -406,8 +408,8 @@ instr 1001
 			chnset 0, "search"
 	endif
 	
-	if changed:k(chnget:k("resetSearch"))==1 then
-		event "i", "ResetSearch", 0, 1
+	if changed:k(chnget:k("search"))==1 then
+		
 	endif
 
 	if changed:k(chnget:k("colourLabel"))==1 then
