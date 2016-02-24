@@ -7,11 +7,11 @@ image bounds(37, 23, 484, 268), colour(90, 90, 90), plant("listbox"), identchann
 	listbox bounds(2, 2, 478, 262), channel("rowListbox"), file("classicRows.txt"), value(-1), align("left"), highlightcolour(200, 200, 0)
 }
 
-;plant to hold array of
+;plant to hold array of 
  labels for displaying our matrix.  
 image bounds(37, 23, 484, 268), colour(90, 90, 90), plant("matrix"), identchannel("matrix"), visible(1), {
 	label bounds(280, 30, 38, 20), widgetarray("note", 144), colour("white"), fontcolour("black"), text(""), corners(0), colour("black")
-}
+}  
 
 ;plant to hold array of widgets used to display search
 groupbox bounds(32, 392, 490, 60), colour(160, 160, 160), fontcolour("black"), text("Search pattern"), plant("searchNotes"), visible(0), identchannel("searchNotesPlant"){
@@ -84,6 +84,12 @@ nchnls = 2
 #define COL #0#
 #define ROW #1#
 
+#define Prime #1#
+#define Retrograde #2#
+#define Inverse #3#
+#define RetrogradeInverse #4#
+
+gkSequencerRow init 0
 gSCSharp[] init 12
 gSCFlat[] init 12
 gSCPc[] init 12
@@ -97,6 +103,8 @@ giMatrix[][] init 12,12
 
 gkLabels[] init 144
 gkLabelsTemp[] init 144
+
+gkSequencerRowColIndex init 0
 
 gkPLabelsTemp[] init 12
 gkPLabels[] init 12
@@ -140,11 +148,25 @@ if chnget:i("search")==1 then				;if instrument is in search mode
 	
 elseif chnget:i("sequencerMode")==1	then	;if instrument is in sequencer mode
 		;proof of concept more than anything else...
-		prints "NoteOn"
 		iOctave = chnget:i("octaveRange");
-		iNote = giNoteArray[giSequencerCount%12]+iOctave+2*12
-		noteondur 1, iNote, 100, 1000
-		giSequencerCount+=1
+		
+		if i(gkSequencerRow)==$Prime  then
+			iNote = giDisplayMatrix[i(gkSequencerRowColIndex)][giSequencerCount%12]+((iOctave+3)*12)
+			noteondur 1, iNote, 100, 1000
+		 	giSequencerCount+=1
+		elseif i(gkSequencerRow)==$Retrograde  then
+			iNote = giDisplayMatrix[i(gkSequencerRowColIndex)][giSequencerCount%12]+((iOctave+3)*12)
+			noteondur 1, iNote, 100, 1000
+			giSequencerCount-=1
+		elseif i(gkSequencerRow)==$Inverse  then
+			iNote = giDisplayMatrix[giSequencerCount%12][i(gkSequencerRowColIndex)]+((iOctave+3)*12)
+			noteondur 1, iNote, 100, 1000
+		 	giSequencerCount+=1
+		elseif i(gkSequencerRow)==$RetrogradeInverse  then
+			iNote = giDisplayMatrix[giSequencerCount%12][i(gkSequencerRowColIndex)]+((iOctave+3)*12)
+			noteondur 1, iNote, 100, 1000
+			giSequencerCount-=1
+		endif
 else										;if instrument is in normal mode
 
 	iGo isAlreadyThere p4 
@@ -415,24 +437,31 @@ instr 1001
 	
 endin
 
-instr 1002 ;check for clicks on labels...
-	if metro(.5)==1 then
+
+;----------------------------------------
+;check for clicks on labels...
+instr 1002 
+	if metro(2)==1 then
 		kIndex = 0
 		until kIndex==144 do
 		    gkLabels[kIndex] chnget sprintfk("note%d", kIndex+1)
 		    if gkLabels[kIndex] != gkLabelsTemp[kIndex] then
 		    	printks "%d %d\n", .1, int(kIndex/12), kIndex%12
-				event "i", "ColourRowAndColumn", 0, 1, int(kIndex/12), kIndex%12
+				event "i", "ColourRowAndColumn", 0, .1, int(kIndex/12), kIndex%12
 		    endif
 			gkLabelsTemp[kIndex] = gkLabels[kIndex]
 		    kIndex = kIndex+1
-		enduntil 
+		enduntil  
 		
 		kIndex = 0 	
 		until kIndex==12 do
 			gkPLabels[kIndex] chnget sprintfk("primeLabels%d", kIndex+1)
 			if gkPLabels[kIndex] != gkPLabelsTemp[kIndex] then
 				printks sprintfk("primeLabels%d", kIndex+1), 0
+				event "i", "ColourRow", 0, .1, kIndex, 0
+				giSequencerCount = 0
+				gkSequencerRow = $Prime
+				gkSequencerRowColIndex = kIndex
 			endif
 			gkPLabelsTemp[kIndex] = gkPLabels[kIndex]
 			kIndex+=1
@@ -443,6 +472,10 @@ instr 1002 ;check for clicks on labels...
 			gkRLabels[kIndex] chnget sprintfk("retroLabels%d", kIndex+1)
 			if gkRLabels[kIndex] != gkRLabelsTemp[kIndex] then
 				printks sprintfk("retroLabels%d", kIndex+1), 0
+				event "i", "ColourRow", 0, .1, kIndex, 1
+				giSequencerCount = 11
+				gkSequencerRow = $Retrograde
+				gkSequencerRowColIndex = kIndex
 			endif
 			gkRLabelsTemp[kIndex] = gkRLabels[kIndex]
 			kIndex+=1
@@ -453,28 +486,48 @@ instr 1002 ;check for clicks on labels...
 			gkILabels[kIndex] chnget sprintfk("inverseLabels%d", kIndex+1)
 			if gkILabels[kIndex] != gkILabelsTemp[kIndex] then
 				printks sprintfk("inverseLabels%d", kIndex+1), 0
+				event "i", "ColourColumn", 0, .1, kIndex, 0
+				giSequencerCount = 0
+				gkSequencerRow = $Inverse
+				gkSequencerRowColIndex = kIndex
 			endif
 			gkILabelsTemp[kIndex] = gkILabels[kIndex]
 			kIndex+=1
-		enduntil
-
+		enduntil 
+ 
 		kIndex = 0 	
 		until kIndex==12 do
 			gkRILabels[kIndex] chnget sprintfk("retroInverseLabels%d", kIndex+1)
 			if gkRILabels[kIndex] != gkRILabelsTemp[kIndex] then
 				printks sprintfk("retroInverseLabels%d", kIndex+1), 0
+				event "i", "ColourColumn", 0, .1, kIndex, 1
+				giSequencerCount = 11
+				gkSequencerRow = $RetrogradeInverse
+				gkSequencerRowColIndex = kIndex
 			endif
 			gkRILabelsTemp[kIndex] = gkRILabels[kIndex]
 			kIndex+=1
-		enduntil			
+		enduntil			 
 	endif
 endin
 ;-------------------------------------------
-; shows the main matrix hides the listbox
+; Colour rows and columns in one go
 instr ColourRowAndColumn
 	resetLabelColours(0)
 	colourRow $ROW, p4, 255, 255, 0
 	colourRow $COL, p5, 255, 255, 0
+endin
+;-------------------------------------------
+; colour a row
+instr ColourRow
+	resetLabelColours(0)
+	colourRow $ROW, p4, 255, 255, 0, 1, p5
+endin
+;-------------------------------------------
+; colour a column
+instr ColourColumn 
+	resetLabelColours(0) 
+	colourRow $COL, p4, 255, 255, 0, 1, p5
 endin
 ;-------------------------------------------
 ; shows the main matrix hides the listbox

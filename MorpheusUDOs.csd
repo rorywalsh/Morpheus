@@ -157,22 +157,25 @@ endop
 ;---------------------------------------
 ; opcode to colour a row or column
 ;------------------------------------
-opcode colourRow, 0, iiiii
-	iType, iIndex, iR, iG, iB xin
+opcode colourRow, 0, iiiiioo
+	iType, iIndex, iR, iG, iB, iFade, iDir xin
 	iCnt init 0
 	iRow init 0
 
-	if iType==0 then
+
+	if iType==0 then ;rows
 		until iCnt==12 do
+			iFade = iFade==0 ? 0 : (iDir==0 ? 255*((iCnt+1)/12) : 255-(250*((iCnt+1)/12)))
 			SChannel sprintf "note_ident%d", iCnt*12+iIndex+1
-			SColour sprintf "colour(%d,%d,%d)", iR, iG, iB
+			SColour sprintf "colour(%d,%d,%d)", iR, iG, iFade
 			chnset SColour, SChannel
 			iCnt += 1 				
 		enduntil 
-	else
+	else 			;columns
 		until iCnt==12 do
+			iFade = iFade==0 ? 0 : (iDir==0 ? 255*((iCnt+1)/12) : 255-(250*((iCnt+1)/12)))
 			SChannel sprintf "note_ident%d", (iIndex*12)+iCnt+1
-			SColour sprintf "colour(%d,%d,%d)", iR, iG, iB
+			SColour sprintf "colour(%d,%d,%d)", iR, iG, iFade
 			chnset SColour, SChannel
 			iCnt += 1 				
 		enduntil 	
