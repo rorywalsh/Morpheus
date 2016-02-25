@@ -66,9 +66,9 @@ label bounds(514, 340, 151, 17), text("[0 0 0 0 0 0]"), identchannel("intervalcl
 
 button bounds(50, 400, 20, 20), channel("RotInc"), text("R"), popuptext("Rotate a row to the right")
 button bounds(30, 400, 20, 20), channel("RotDec"), text("L"), popuptext("Rotate a row to the left")
-button bounds(50, 420, 20, 20), channel("RotIncS"), text("+"), popuptext("Stravinsky Right Rotation")
-button bounds(30, 420, 20, 20), channel("RotDecS"), text("-"), popuptext("Stravinsky Right Rotation")
-
+button bounds(50, 420, 20, 20), channel("TransU"), text("+"), popuptext("Transpose Up")
+button bounds(30, 420, 20, 20), channel("TransD"), text("-"), popuptext("Transpose Down")
+checkbox bounds(75, 400, 110, 20), channel("RotMode"), fontcolour("black"), text("Rotation Type"), value(0)
 
 checkbox bounds(504, 368, 120, 20), channel("sequencerMode"), fontcolour("black"), text("Sequencer"), value(0)
 combobox bounds(608, 368, 60, 22), channel("octaveRange"), items("C1", "C2", "C3", "C4", "C5", "C6"), value(3)
@@ -438,20 +438,22 @@ instr 1001
 		event "i", "RandRow", 0, 1
 		event "i", "ShowMatrix", 0, 1
 	endif
-
+	
 	if changed:k(chnget:k("RotInc"))==1 then
-		event "i", "RotationRight", 0, 1, 0 	
+		event "i", "RotationRight", 0, 1, chnget:i("RotMode") 
 	endif
+	
 	if changed:k(chnget:k("RotDec"))==1 then
-		event "i", "RotationLeft", 0, 1, 0	
+		event "i", "RotationLeft", 0, 1, chnget:i("RotMode") 
 	endif
-	if changed:k(chnget:k("RotIncS"))==1 then
-		event "i", "RotationRight", 0, 1, 1 	
+	
+	if changed:k(chnget:k("TransU"))==1 then
+		event "i", "Transposition", 0, 1, 1 
 	endif
-	if changed:k(chnget:k("RotDecS"))==1 then
-		event "i", "RotationLeft", 0, 1, 1 	
+	
+	if changed:k(chnget:k("TransD"))==1 then
+		event "i", "Transposition", 0, 1, -1 
 	endif
-		
 endin
 
 instr RotationRight
@@ -528,6 +530,20 @@ instr RotationLeft
 ;	od
 	prints "%d %d %d", giNoteArray[0], giNoteArray[1], giNoteArray[2]
 	;event "i", "ChangeSpelling", 0, 1, 0
+endin
+
+instr Transposition
+	iCnt init 0
+	iTemp init 0
+	
+	until iCnt == giNoteCount do
+		iTemp = giNoteArray[iCnt]+p4
+		iTemp wrap iTemp,0,12
+		giNoteArray[iCnt] = iTemp
+		iCnt += 1
+	od
+
+	prints "%d %d %d", giNoteArray[0], giNoteArray[1], giNoteArray[2]
 endin
 ;----------------------------------------
 ;check for clicks on labels...
