@@ -106,6 +106,8 @@ opcode getPX, i, j
 		iPX = 4
 		elseif chnget:i("permutationsCombo")==8 then
 		iPX = 5
+		elseif chnget:i("permutationsCombo")==9 then
+		iPX = 6
 		endif
 	xout iPX		
 endop
@@ -160,9 +162,11 @@ endop
 opcode updateMatrix, 0, i[]
 iArray[] xin
 iLocalNoteArray[] = iArray
+	iLocCount = giNoteCount
 	giNoteCount = 0
 	iCnt init 0
-	while iCnt < 12 do
+	;while iCnt < 12 do
+	while iCnt < iLocCount do
 		prints "%d ", iLocalNoteArray[iCnt]
 		event_i "i", 100, iCnt*.01, .1, iLocalNoteArray[iCnt]
 		iCnt += 1

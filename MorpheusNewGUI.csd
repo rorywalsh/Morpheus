@@ -23,7 +23,7 @@ image bounds(539, 48, 141, 135), plant("matrixPlant"), identchannel("matrixPlant
 image bounds(539, 232, 141, 205) plant("operationsPlant"), identchannel("operationsPlant_ident") {     
 	label bounds(0, 5, 141, 14) text("Permutations"), fontstyle("bold italic") fontcolour("black")
 	image bounds(15, 20, 106, 2), colour(180, 180, 180)
-	combobox bounds(22, 25, 92, 24), channel("permutationsCombo"), items("Select", "Original", "O x E", "O1 x O2", "Over 5", "Over 7","R[Tri]","R[Tetr]")
+	combobox bounds(22, 25, 92, 24), channel("permutationsCombo"), items("Select", "Original", "O x E", "O1 x O2", "Over 5", "Over 7","R[Tri]","R[Tetr]","R[Hex]")
 	label bounds(0, 53, 141, 14), fontstyle("bold italic"), text("Modulation"), fontcolour("black")
 	image bounds(15, 68, 106, 2), colour(180, 180, 180)
 	combobox bounds(22, 73, 92, 24), channel("modulationsCombo"), items("Select", "Original", "M5", "M7", "M11"), popuptext("Transposes each note by a set interval")
@@ -818,13 +818,12 @@ instr RandRow
 		endif
 		iCnt += 1
 	od
-;	prints "%d", iCnt_
+
 	; Fisher and Yeates' Algorithm
 	iCnt = iCnt_
 	until iCnt == 0 do
 		iGen random 0, iCnt
 		iGen = int(iGen)
-	;	iRandN[iCnt2] = iRand_[iGen] ; be fixed with giNoteArray
 		giNoteArray[giNoteCount+iCnt2] = iRand_[iGen]
 		iRand_[iGen] = -1
 		iCnt2 += 1
@@ -847,20 +846,8 @@ instr RandRow
 		
 		iCnt -= 1
 	od
-	;
-	iCnt = 0
-	iLocalNoteArray[] =  giNoteArray
-
-	while iCnt < 12 do
-	;	prints "%d ", iRandN[iCnt]
-	 	prints "%d ", iLocalNoteArray[iCnt]
-		event_i "i", 100, iCnt*.1, .1, iLocalNoteArray[iCnt]
-		iCnt += 1
-
-	od
-	prints "\n"
-	
-	;event_i "i", "CalculateMatrix", 0, .1
+	giNoteCount = 12
+	updateMatrix(giNoteArray)
 endin
 ;-------------------------------------------
 instr DoRowPermutation
@@ -935,15 +922,23 @@ instr DoRowPermutation
 			iCnt += 1
 		od
 	
+	elseif iP == 6 then
+	; 0 1 2 3 4 5 6 7 8 9 t e
+	; 5 0 1 2 3 4 e 6 7 8 9 t
+		iCnt = 0
+		until iCnt == 2 do
+			giNoteArray[iCnt*6] = giNoteArray[iCnt*6+5]
+			giNoteArray[iCnt*6+1] = iTemp[iCnt*6]
+			giNoteArray[iCnt*6+2] = iTemp[iCnt*6+1]
+			giNoteArray[iCnt*6+3] = iTemp[iCnt*6+2]
+			giNoteArray[iCnt*6+2] = iTemp[iCnt*6+1]
+			giNoteArray[iCnt*6+3] = iTemp[iCnt*6+2]
+			iCnt += 1
+		od
+	
+	
 	endif
-	iLocalNoteArray[] = giNoteArray
-	giNoteCount = 0
-	iCnt = 0
-	while iCnt < 12 do
-	 ;	prints "%d ", iLocalNoteArray[iCnt]
-		event_i "i", 100, iCnt*.01, .1, iLocalNoteArray[iCnt]
-		iCnt += 1
-	od
+	updateMatrix(giNoteArray)
 endin
 ;-------------------------------------------
 ; reset label colours
@@ -952,44 +947,32 @@ instr CallResetLabelColours
 endin
 
 ;-------------------------------------------
-; Multiplication
+; Multiplication 27.02.16
 instr DoMatrixMultiplication	
-	iCur init 0
-	iCntV init 0
-	iCntH init 0
+	iCnt init 0
 	iM = getMX:i()
 	
-	until iCntV == giNoteCount do
-		until iCntH == giNoteCount do
-			iCur = giMatrix[iCntH][iCntV]*iM
-			iCur wrap iCur,0,12
-			giMatrix[iCntH][iCntV] = iCur
-			iCntH += 1
-		od
-		iCntH = 0
-		iCntV += 1
+	until iCnt == giNoteCount do
+		iTemp = giNoteArray[iCnt] * iM
+		iTemp wrap iTemp,0,12
+		giNoteArray[iCnt] = iTemp
+		iCnt += 1
 	od			
-	event "i", "ChangeSpelling", 0, 1, 0
+	updateMatrix(giNoteArray)
 endin
 
 ;-------------------------------------------
-; Normalization 16.02.16
+; Normalization 27.02.16
 instr DoNorm	
-	iCur init 0
-	iCntV init 0
-	iCntH init 0
-	
-	until iCntV == giNoteCount do
-		until iCntH == giNoteCount do
-			iCur = giMatrix[iCntH][iCntV] - giNoteArray[0]
-			iCur wrap iCur,0,12
-			giMatrix[iCntH][iCntV] = iCur
-			iCntH += 1
-		od
-		iCntH = 0
-		iCntV += 1
+	iCnt init 0
+	iZero = giNoteArray[0]
+	until iCnt == giNoteCount do
+		iTemp = giNoteArray[iCnt] - iZero
+		iTemp wrap iTemp,0,12
+		giNoteArray[iCnt] = iTemp
+		iCnt += 1
 	od			
-	event "i", "ChangeSpelling", 0, 1, 0
+	updateMatrix(giNoteArray)
 endin
 ;-------------------------------------------
 ; Display notification ..called whenever we need to give
