@@ -161,6 +161,7 @@ endop
 ;--------------------------------------------------------------------
 opcode updateMatrix, 0, i[]
 iArray[] xin
+giIC[] fillarray 0,0,0,0,0,0
 iLocalNoteArray[] = iArray
 	iLocCount = giNoteCount
 	giNoteCount = 0

@@ -40,7 +40,7 @@ image bounds(539, 232, 141, 205) plant("operationsPlant"), identchannel("operati
 image bounds(539, 268, 141, 160), plant("setTheoryPlant"), identchannel("setTheoryPlant_ident"){
 	label bounds(0, 5, 141, 14), text("Interval Class"),  fontstyle("bold italic") fontcolour("black")
 	image bounds(15, 19, 106, 2), colour(180, 180, 180)
-	label bounds(5, 20, 130, 16), text("[0  0  0  0  0  0]"), fontcolour("black"), fontstyle("plain"), identchannel("intervalclass")
+	label bounds(5, 20, 130, 16), text("[0 0 0 0 0 0]"), fontcolour("black"), fontstyle("plain"), identchannel("intervalclass")
 	label bounds(0, 40, 141, 14), text("Prime Form"),  fontstyle("bold italic") fontcolour("black")
 	image bounds(15, 54, 106, 2), colour(180, 180, 180)
 	label bounds(5, 60, 130, 12), text(" 1 2 3 4 5 6 7 8 9 10 11"), fontcolour("black"), fontstyle("plain"), identchannel("intervalclass")
@@ -570,9 +570,7 @@ instr RotationRight
 			giNoteArray[iCnt] = iTemp
 			iCnt += 1
 		od	
-	endif
-	
-	prints "%d %d %d", giNoteArray[0], giNoteArray[1], giNoteArray[2]	
+	endif	
 	updateMatrix(giNoteArray)
 
 endin
@@ -613,8 +611,6 @@ instr Transposition
 	od
 
 	updateMatrix(giNoteArray)
-
-	prints "%d %d %d", giNoteArray[0], giNoteArray[1], giNoteArray[2]
 endin
 ;----------------------------------------
 ;check for clicks on labels...
