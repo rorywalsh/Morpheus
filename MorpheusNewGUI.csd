@@ -60,8 +60,9 @@ image bounds(539, 435, 141, 30), plant("midiPlant"), identchannel("midiPlant_ide
 
 ;csoundoutput bounds(0, 500, 700, 200)
 ;plant to hold listbox for known rows. Easier to mane when it's a plant
-image bounds(37, 23, 484, 268), colour(90, 90, 90), plant("listbox"), identchannel("listbox"), visible(0), {
-	listbox bounds(2, 2, 478, 262), channel("rowListbox"), file("classicRows.txt"), value(-1), align("left"), highlightcolour(200, 200, 0)
+image bounds(37, 23, 436, 316), colour(90, 90, 90), plant("listbox"), identchannel("listbox"), visible(0), {
+	image bounds(0, 0, 436, 316), colour("black")
+	listbox bounds(2, 2, 478, 262), channel("rowListbox"), file("famousRowNames.txt"), value(-1), align("left"), highlightcolour(200, 200, 0)
 }
 
 ;plant to hold array of labels for displaying our matrix.  
@@ -94,11 +95,6 @@ image bounds(480, 28, 30, 300), colour("white"), plant("retroLabelsPlant"), iden
 	label bounds(0, 0, 30, 15), text(""), fontstyle(0),  fontcolour("black"), colour("white") align("left"), widgetarray("retroLabels", 12)
 }
  
-;label bounds(32, 440, 445, 14), colour("black"), visible(0), fontcolour("lime"), text(""), bold(0), identchannel("outputMessage")
-;button bounds(632, 320, 60, 25), channel("debug"), text("Debug")
-
-
-
 
 keyboard bounds(16, 360, 660, 79)
 

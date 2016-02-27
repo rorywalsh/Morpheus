@@ -365,16 +365,16 @@ endop
 opcode nameRowsAndColumns, 0, iii
 	iP, iI, iIndex xin
 	SChannel sprintf "primeLabels_ident%d", iIndex
-	SMessage sprintf "text(\"P%d\")", iP
+	SMessage sprintf "text(\"P-%d\")", iP
 	chnset SMessage, SChannel	
 	SChannel sprintf "inverseLabels_ident%d", iIndex
-	SMessage sprintf "text(\"I%d\")", iI
+	SMessage sprintf "text(\"I-%d\")", iI
 	chnset SMessage, SChannel		
 	SChannel sprintf "retroInverseLabels_ident%d", iIndex
-	SMessage sprintf "text(\"RI%d\")", iI
+	SMessage sprintf "text(\"RI-%d\")", iI
 	chnset SMessage, SChannel			
 	SChannel sprintf "retroLabels_ident%d", iIndex
-	SMessage sprintf "text(\"R%d\")", iP
+	SMessage sprintf "text(\"R-%d\")", iP
 	chnset SMessage, SChannel	
 endop			
 
