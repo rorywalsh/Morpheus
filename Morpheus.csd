@@ -456,6 +456,8 @@ instr 1001
 	endif
 endin
 
+;----------------------------------------
+;rotation instruments...
 instr RotationRight
 	iCnt init giNoteCount-1
 	iCntV init 0
@@ -485,17 +487,8 @@ instr RotationRight
 	endif
 	
 	prints "%d %d %d", giNoteArray[0], giNoteArray[1], giNoteArray[2]	
+	updateMatrix(giNoteArray)
 
-;	iLocalNoteArray[] = giNoteArray
-;	giNoteCountLoc = giNoteCount
-;	giNoteCount = 0
-;	iCnt = 0
-;	while iCnt < giNoteCountLoc do
-	 ;	prints "%d ", iLocalNoteArray[iCnt]
-;		event_i "i", 1, iCnt*.01, .1, iLocalNoteArray[iCnt]
-;		iCnt += 1
-;	od		
-;	event "i", "ChangeSpelling", 0, 1, 0
 endin
 
 instr RotationLeft
@@ -519,17 +512,7 @@ instr RotationLeft
 		od	
 	endif
 	
-;	iLocalNoteArray[] = giNoteArray
-;	giNoteCountLoc = giNoteCount
-;	giNoteCount = 0
-;	iCnt = 0
-;	while iCnt < giNoteCountLoc do
-	 ;	prints "%d ", iLocalNoteArray[iCnt]
-;		event_i "i", 1, iCnt*.01, .1, iLocalNoteArray[iCnt]
-;		iCnt += 1
-;	od
-	prints "%d %d %d", giNoteArray[0], giNoteArray[1], giNoteArray[2]
-	;event "i", "ChangeSpelling", 0, 1, 0
+	updateMatrix(giNoteArray)
 endin
 
 instr Transposition
@@ -542,6 +525,8 @@ instr Transposition
 		giNoteArray[iCnt] = iTemp
 		iCnt += 1
 	od
+
+	updateMatrix(giNoteArray)
 
 	prints "%d %d %d", giNoteArray[0], giNoteArray[1], giNoteArray[2]
 endin
@@ -783,7 +768,7 @@ instr RandRow
 	while iCnt < 12 do
 	;	prints "%d ", iRandN[iCnt]
 	 	prints "%d ", iLocalNoteArray[iCnt]
-		event_i "i", 1, iCnt*.1, .1, iLocalNoteArray[iCnt]
+		event_i "i", 100, iCnt*.1, .1, iLocalNoteArray[iCnt]
 		iCnt += 1
 
 	od
@@ -870,7 +855,7 @@ instr DoRowPermutation
 	iCnt = 0
 	while iCnt < 12 do
 	 ;	prints "%d ", iLocalNoteArray[iCnt]
-		event_i "i", 1, iCnt*.01, .1, iLocalNoteArray[iCnt]
+		event_i "i", 100, iCnt*.01, .1, iLocalNoteArray[iCnt]
 		iCnt += 1
 	od
 endin

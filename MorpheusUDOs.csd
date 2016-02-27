@@ -154,6 +154,21 @@ opcode fillDisplayMatrix, 0, i[][]
 
 endop
 
+;--------------------------------------------------------------------
+; opcode to update visual matrix after some changes have been made
+;--------------------------------------------------------------------
+opcode updateMatrix, 0, i[]
+iArray[] xin
+iLocalNoteArray[] = iArray
+	giNoteCount = 0
+	iCnt init 0
+	while iCnt < 12 do
+		prints "%d ", iLocalNoteArray[iCnt]
+		event_i "i", 100, iCnt*.01, .1, iLocalNoteArray[iCnt]
+		iCnt += 1
+	od
+endop
+
 ;---------------------------------------
 ; opcode to colour a row or column
 ;------------------------------------
