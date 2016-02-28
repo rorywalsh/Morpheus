@@ -160,9 +160,9 @@ endop
 ; opcode to update visual matrix after some changes have been made
 ;--------------------------------------------------------------------
 opcode updateMatrix, 0, i[]
-iArray[] xin
-giIC[] fillarray 0,0,0,0,0,0
-iLocalNoteArray[] = iArray
+	iArray[] xin
+	giIC[] fillarray 0,0,0,0,0,0
+	iLocalNoteArray[] = iArray
 	iLocCount = giNoteCount
 	giNoteCount = 0
 	iCnt init 0

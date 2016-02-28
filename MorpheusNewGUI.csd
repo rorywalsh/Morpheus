@@ -62,7 +62,7 @@ image bounds(539, 435, 141, 30), plant("midiPlant"), identchannel("midiPlant_ide
 ;plant to hold listbox for known rows. Easier to mane when it's a plant
 image bounds(37, 23, 436, 316), colour(90, 90, 90), plant("listbox"), identchannel("listbox"), visible(0), {
 	image bounds(0, 0, 436, 316), colour("black")
-	listbox bounds(2, 2, 478, 262), channel("rowListbox"), file("famousRowNames.txt"), value(-1), align("left"), highlightcolour(200, 200, 0)
+	listbox bounds(2, 2, 478, 262), channel("rowListbox"), populate("*.row"), value(-1), align("left"), highlightcolour(200, 200, 0)
 }
 
 ;plant to hold array of labels for displaying our matrix.  
@@ -102,6 +102,7 @@ keyboard bounds(16, 360, 660, 79)
 
 
 
+button bounds(31, 513, 60, 25), channel("but1"), text("Push", "Push")
 </Cabbage> 
 <CsoundSynthesizer>
 <CsOptions>
@@ -122,6 +123,8 @@ nchnls = 2
 #define Retrograde #2#
 #define Inverse #3#
 #define RetrogradeInverse #4#
+
+giGEN02RowTable init 99
 
 gkSequencerRow init 0
 gSCSharp[] init 12
@@ -521,7 +524,7 @@ instr 1001
 	endif	
 	
 	if changed:k(chnget:k("rowListbox"))==1 then
-		event "i", "RandRow", 0, 1
+		event "i", "LoadPresetFile", 0, 1
 		event "i", "ShowMatrix", 0, 1
 	endif
 	
@@ -540,8 +543,36 @@ instr 1001
 	if changed:k(chnget:k("TransD"))==1 then
 		event "i", "Transposition", 0, 1, -1 
 	endif
+	
+	if changed:k(chnget:k("but1"))==1 then
+		event "i", "LoadPresetFile", 0, 1
+	endif
+	
+	
 endin
 
+
+instr LoadPresetFile
+a1 init 1
+iCnt init 0
+SFilenames[] directory ".", ".row"
+iNumberOfFiles lenarray SFilenames
+
+
+printf_i "Filename = %s \n", 1, SFilenames[chnget:i("rowListbox")-1]
+ftload SFilenames[chnget:i("rowListbox")-1], 1, giGEN02RowTable
+
+print ftlen(giGEN02RowTable)
+
+until iCnt==12 do
+	giNoteArray[iCnt] tab_i iCnt, giGEN02RowTable
+	;print giNoteArray[iCnt]
+	iCnt = iCnt+1
+od
+
+giNoteCount = 12
+updateMatrix(giNoteArray)
+endin
 ;----------------------------------------
 ;rotation instruments...
 instr RotationRight
@@ -571,6 +602,7 @@ instr RotationRight
 			iCnt += 1
 		od	
 	endif	
+	
 	updateMatrix(giNoteArray)
 
 endin
@@ -1065,6 +1097,8 @@ instr SearchMatrixForRow
 endin
 </CsInstruments>  
 <CsScore>
+
+f99 0 12 -2 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 i1000 0 1 
 i1001 0 10000 
 i1002 0 10000
