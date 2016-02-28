@@ -98,11 +98,6 @@ image bounds(480, 28, 30, 300), colour("white"), plant("retroLabelsPlant"), iden
 
 keyboard bounds(16, 360, 660, 79)
 
-
-
-
-
-button bounds(31, 513, 60, 25), channel("but1"), text("Push", "Push")
 </Cabbage> 
 <CsoundSynthesizer>
 <CsOptions>
@@ -543,11 +538,6 @@ instr 1001
 	if changed:k(chnget:k("TransD"))==1 then
 		event "i", "Transposition", 0, 1, -1 
 	endif
-	
-	if changed:k(chnget:k("but1"))==1 then
-		event "i", "LoadPresetFile", 0, 1
-	endif
-	
 	
 endin
 
