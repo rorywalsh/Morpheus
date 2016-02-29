@@ -66,13 +66,13 @@ endop
 
 opcode getSpelling, i, j
 	iDummyIn xin
-		if chnget:i("spellingCombo")==1 then
+		if chnget:i("sharpSpelling")==1 then
 		iSpelling = 0
-		elseif chnget:i("spellingCombo")==2 then
+		elseif chnget:i("flatSpelling")==1 then
 		iSpelling = 1
-		elseif chnget:i("spellingCombo")==3 then
+		elseif chnget:i("10Spelling")==1 then
 		iSpelling = 2
-		elseif chnget:i("spellingCombo")==4 then
+		elseif chnget:i("tSpelling")==1 then
 		iSpelling = 3
 		endif
 	xout iSpelling		
@@ -370,16 +370,16 @@ endop
 opcode nameRowsAndColumns, 0, iii
 	iP, iI, iIndex xin
 	SChannel sprintf "primeLabels_ident%d", iIndex
-	SMessage sprintf "text(\"P-%d\")", iP
+	SMessage sprintf "text(\"P%d\")", iP
 	chnset SMessage, SChannel	
 	SChannel sprintf "inverseLabels_ident%d", iIndex
-	SMessage sprintf "text(\"I-%d\")", iI
+	SMessage sprintf "text(\"I%d\")", iI
 	chnset SMessage, SChannel		
 	SChannel sprintf "retroInverseLabels_ident%d", iIndex
-	SMessage sprintf "text(\"RI-%d\")", iI
+	SMessage sprintf "text(\"RI%d\")", iI
 	chnset SMessage, SChannel			
 	SChannel sprintf "retroLabels_ident%d", iIndex
-	SMessage sprintf "text(\"R-%d\")", iP
+	SMessage sprintf "text(\"R%d\")", iP
 	chnset SMessage, SChannel	
 endop			
 

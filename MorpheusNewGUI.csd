@@ -1,23 +1,28 @@
 <Cabbage>
 form size(700, 555), caption(""), pluginID("plu1"), colour("white")
 
-image bounds(527, 16, 166, 318), colour(200, 200, 200)         
+image bounds(527, 16, 166, 318), colour(100, 100, 100)         
 ;image bounds(24, 528, 647, 95), colour(200, 200, 200)               
 ; 
-button bounds(536, 24, 151, 25), channel("matrixPanel"), text("Matrix"), identchannel("matrixPanel_ident"), colour:1(70, 70, 70), radiogroup(99), value(1)
-button bounds(536, 184, 151, 25), channel("operationsPanel"), text("Operations"), identchannel("operationsPanel_ident"), colour:1(70, 70, 70), radiogroup(99)
-button bounds(536, 208, 151, 25), channel("setTheoryPanel"), text("Set Theory"), identchannel("setTheoryPanel_ident"), colour:1(70, 70, 70), radiogroup(99)
-button bounds(536, 232, 151, 25), channel("midiPanel"), text("Sequencer"), identchannel("midiPanel_ident"), colour:1(70, 70, 70), radiogroup(99)
-
+button bounds(536, 24, 151, 25), channel("matrixPanel"), text("Matrix"), identchannel("matrixPanel_ident"), colour:1("green"), radiogroup(99), value(1)
+button bounds(536, 184, 151, 25), channel("operationsPanel"), text("Operations"), identchannel("operationsPanel_ident"), colour:1("green"), radiogroup(99)
+button bounds(536, 208, 151, 25), channel("setTheoryPanel"), text("Set Theory"), identchannel("setTheoryPanel_ident"), colour:1("green"), radiogroup(99)
+button bounds(536, 232, 151, 25), channel("midiPanel"), text("Sequencer"), identchannel("midiPanel_ident"), colour:1("green"), radiogroup(99)
+ 
 
 image bounds(539, 48, 141, 135), plant("matrixPlant"), identchannel("matrixPlant_ident") {                                          
 	button bounds(5, 5, 64, 20), channel("resetRow"), text("Clear"), popuptext("Reset matrix back to blank state")
 	button bounds(70, 5, 65, 20), channel("search"), text("Search", "Reset"), colour:1("green"), popuptext("Enable searching of matrix for a particular pattern")
-	button bounds(15, 80, 110, 20), channel("rand"), text("Random"), popuptext("Fill matrix with random values")
-	label bounds(0, 30, 141, 14), text("Spelling"), fontcolour(40, 40, 40), align("centre"), fontstyle("bold italic")
-	image bounds(15, 45, 106, 2), colour(180, 180, 180)
-	combobox bounds(22, 50, 92, 24), channel("spellingCombo"), items("Sharps", "Flats", "10", "t"), value(3), popuptext("Change harmonic spelling of notes")
-	button bounds(15, 103, 110, 20), channel("classicRows"), text("Show Presets", "Show Matrix"), value(0), popuptext("Shows a list of iconic rows used in various 12-tone compositions")
+	button bounds(15, 70, 110, 20), channel("rand"), text("Random"), popuptext("Fill matrix with random values")
+	label bounds(0, 27, 141, 14), text("Spelling"), fontcolour(40, 40, 40), align("centre"), fontstyle("bold italic")
+	image bounds(15, 42, 106, 2), colour(180, 180, 180)
+	button bounds(10, 45, 30, 19), channel("sharpSpelling"), text("#"), popuptext("Spell with sharps"), radiogroup(101), colour:1("green")
+	button bounds(40, 45, 30, 19), channel("flatSpelling"), text("b"), popuptext("Spell with flats"), radiogroup(101), colour:1("green")
+	button bounds(70, 45, 30, 19), channel("10Spelling"), text("10"), popuptext("Spell with numbers"), radiogroup(101), value(1), colour:1("green")
+	button bounds(100, 45, 30, 19), channel("tSpelling"), text("t"), popuptext("Spell with numbers, but use t for 10, and e for eleven"), radiogroup(101), colour:1("green")
+	;combobox bounds(22, 50, 92, 24), channel("spellingCombo"), items("Sharps", "Flats", "10", "t"), value(3), popuptext("Change harmonic spelling of notes")
+	button bounds(15, 91, 110, 19), channel("classicRows"), text("Show Presets", "Show Matrix"), value(0), popuptext("Shows a list of iconic rows used in various 12-tone compositions")
+	filebutton bounds(15, 112, 110, 19), channel("saveRow"), text("Save Row"), popuptext("Save current row to presets")
 	}
 
 image bounds(539, 232, 141, 205) plant("operationsPlant"), identchannel("operationsPlant_ident") {     
@@ -449,7 +454,8 @@ instr 1001
 		event "i", "DoNorm", 0, 1 	
 	endif
 
-	kReSpellNotes changed chnget:k("spellingCombo")
+	;kReSpellNotes changed chnget:k("spellingCombo")
+	kReSpellNotes changed chnget:k("sharpSpelling"), chnget:k("10Spelling"), chnget:k("flatSpelling"), chnget:k("tSpelling")
 	if kReSpellNotes == 1 then
 		event "i", "ChangeSpelling", 0, 1, 0
 	endif
