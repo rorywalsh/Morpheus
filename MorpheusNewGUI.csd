@@ -98,6 +98,7 @@ image bounds(480, 28, 30, 300), colour("white"), plant("retroLabelsPlant"), iden
 
 keyboard bounds(16, 360, 660, 79)
 
+;button bounds(27, 511, 60, 25), channel("but1"), text("Push", "Push")
 </Cabbage> 
 <CsoundSynthesizer>
 <CsOptions>
@@ -538,7 +539,10 @@ instr 1001
 	if changed:k(chnget:k("TransD"))==1 then
 		event "i", "Transposition", 0, 1, -1 
 	endif
-	
+
+	if changed:k(chnget:k("but1"))==1 then
+		event "i", "LoadPresetFile", 0, 1
+	endif	
 endin
 
 
@@ -548,18 +552,22 @@ iCnt init 0
 SFilenames[] directory ".", ".row"
 iNumberOfFiles lenarray SFilenames
 
+;until iCnt>=iNumberOfFiles do
+;	printf_i "Filename = %s \n", 1, SFilenames[iCnt]
+;	iCnt = iCnt+1
+;od
 
 printf_i "Filename = %s \n", 1, SFilenames[chnget:i("rowListbox")-1]
 ftload SFilenames[chnget:i("rowListbox")-1], 1, giGEN02RowTable
-
+;
 print ftlen(giGEN02RowTable)
-
+;
 until iCnt==12 do
 	giNoteArray[iCnt] tab_i iCnt, giGEN02RowTable
-	;print giNoteArray[iCnt]
+;rint giNoteArray[iCnt]
 	iCnt = iCnt+1
 od
-
+;
 giNoteCount = 12
 updateMatrix(giNoteArray)
 endin
