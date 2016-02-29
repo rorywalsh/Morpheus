@@ -22,7 +22,7 @@ image bounds(539, 48, 141, 135), plant("matrixPlant"), identchannel("matrixPlant
 	button bounds(100, 45, 30, 19), channel("tSpelling"), text("t"), popuptext("Spell with numbers, but use t for 10, and e for eleven"), radiogroup(101), colour:1("green")
 	;combobox bounds(22, 50, 92, 24), channel("spellingCombo"), items("Sharps", "Flats", "10", "t"), value(3), popuptext("Change harmonic spelling of notes")
 	button bounds(15, 91, 110, 19), channel("classicRows"), text("Show Presets", "Show Matrix"), value(0), popuptext("Shows a list of iconic rows used in various 12-tone compositions")
-	filebutton bounds(15, 112, 110, 19), channel("saveRow"), text("Save Row"), popuptext("Save current row to presets")
+	filebutton bounds(15, 112, 110, 19), channel("saveRow"), text("Save Row"), mode("save"), popuptext("Save current row to presets")
 	}
 
 image bounds(539, 232, 141, 205) plant("operationsPlant"), identchannel("operationsPlant_ident") {     
@@ -126,6 +126,7 @@ nchnls = 2
 #define RetrogradeInverse #4#
 
 giGEN02RowTable init 99
+giGEN02SavedRowTable init 100
 
 gkSequencerRow init 0
 gSCSharp[] init 12
@@ -152,7 +153,7 @@ gkRILabelsTemp[] init 12
 gkRILabels[] init 12
 gkILabelsTemp[] init 12
 gkILabels[] init 12
-
+gSFilename init ""
 giDisplayMatrix[][] init 24, 24
 giNoteCount init 0;
 giNoteArray[] fillarray -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
@@ -546,36 +547,40 @@ instr 1001
 		event "i", "Transposition", 0, 1, -1 
 	endif
 
-	if changed:k(chnget:k("but1"))==1 then
-		event "i", "LoadPresetFile", 0, 1
+	gSFilename chnget "saveRow"
+	kTrig changed gSFilename
+	if kTrig==1 then
+		event "i", "SavePresetFile", 0, 1
 	endif	
 endin
 
+;----------------------------------------
+;save and load presets...
+instr SavePresetFile
+SFullFileName sprintf "%s.row", gSFilename
+
+copya2ftab giNoteArray, giGEN02SavedRowTable
+ftsave SFullFileName, 1, giGEN02SavedRowTable
+;giGEN02SavedRowTable
+endin
 
 instr LoadPresetFile
-a1 init 1
-iCnt init 0
-SFilenames[] directory ".", ".row"
-iNumberOfFiles lenarray SFilenames
-
-;until iCnt>=iNumberOfFiles do
-;	printf_i "Filename = %s \n", 1, SFilenames[iCnt]
-;	iCnt = iCnt+1
-;od
-
-printf_i "Filename = %s \n", 1, SFilenames[chnget:i("rowListbox")-1]
-ftload SFilenames[chnget:i("rowListbox")-1], 1, giGEN02RowTable
-;
-print ftlen(giGEN02RowTable)
-;
-until iCnt==12 do
-	giNoteArray[iCnt] tab_i iCnt, giGEN02RowTable
-;rint giNoteArray[iCnt]
-	iCnt = iCnt+1
-od
-;
-giNoteCount = 12
-updateMatrix(giNoteArray)
+	a1 init 1
+	iCnt init 0
+	SFilenames[] directory ".", ".row"
+	iNumberOfFiles lenarray SFilenames
+	printf_i "Filename = %s \n", 1, SFilenames[chnget:i("rowListbox")-1]
+	ftload SFilenames[chnget:i("rowListbox")-1], 1, giGEN02RowTable
+	
+	
+	until iCnt==12 do
+		giNoteArray[iCnt] tab_i iCnt, giGEN02RowTable
+	;rint giNoteArray[iCnt]
+		iCnt = iCnt+1
+	od
+	
+	giNoteCount = 12
+	updateMatrix(giNoteArray)
 endin
 ;----------------------------------------
 ;rotation instruments...
@@ -1103,6 +1108,8 @@ endin
 <CsScore>
 
 f99 0 12 -2 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+f100 0 12 -2 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+
 i1000 0 1 
 i1001 0 10000 
 i1002 0 10000
