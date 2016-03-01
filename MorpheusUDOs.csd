@@ -15,6 +15,7 @@ opcode isAlreadyThere, i, i
 		endif
 		iCnt = iCnt+1
 	od
+		
 	if (iPresent == 0)then
 		giNoteArray[giNoteCount] = iNote
 		
@@ -222,25 +223,151 @@ opcode resetLabelColours, 0, i
 	iResetText xin
 	iCnt init 0
 	iCntRows init 0
+	iPaint init 0
 
-	until iCnt > 144 do
-		if iCntRows%2==1 then
-			iGrayScale = 200
-		else	
-			iGrayScale = (iCnt%2==0 ? 255 : 220)
-		endif
+	if chnget:i("patterns")==2 then	;lattice
+		until iCnt > 144 do
+			if iCntRows%2==1 then
+				iGrayScale = 210
+			else	
+				iGrayScale = (iCnt%2==0 ? 255 : 210)
+			endif
+			
+			if iResetText==1 then
+				S1 sprintfk "colour(%d, %d, %d), text(\"\")", iGrayScale, iGrayScale, iGrayScale
+			else
+				S1 sprintfk "colour(%d, %d, %d)", iGrayScale, iGrayScale, iGrayScale
+			endif
+			
+			S2 sprintfk "note_ident%d", iCnt+1
+			chnset S1, S2
+			iCnt=iCnt+1
+			iCntRows = (iCnt%12==0 ? iCntRows+1 : iCntRows)
+		enduntil
+
+	elseif chnget:i("patterns")==1 then	;chessboard
+		until iCnt > 144 do
+			if iCntRows%2==1 then
+				iGrayScale = (iCnt%2==0 ? 210 : 255)
+			else	
+				iGrayScale = (iCnt%2==0 ? 255 : 210)
+			endif
+			
+			if iResetText==1 then
+				S1 sprintfk "colour(%d, %d, %d), text(\"\")", iGrayScale, iGrayScale, iGrayScale
+			else
+				S1 sprintfk "colour(%d, %d, %d)", iGrayScale, iGrayScale, iGrayScale
+			endif
+			
+			S2 sprintfk "note_ident%d", iCnt+1
+			chnset S1, S2
+			iCnt=iCnt+1
+			iCntRows = (iCnt%12==0 ? iCntRows+1 : iCntRows)
+		enduntil
+	
+	elseif chnget:i("patterns")==3 then	;dyads
+		until iCnt > 144 do
 		
-		if iResetText==1 then
-			S1 sprintfk "colour(%d, %d, %d), text(\"\")", iGrayScale, iGrayScale, iGrayScale
-		else
-			S1 sprintfk "colour(%d, %d, %d)", iGrayScale, iGrayScale, iGrayScale
-		endif
+			if iCntRows%2==1 then
+				iGrayScale = (iPaint==0 ? 210 : 255)
+			else	
+				iGrayScale = (iPaint==0 ? 255 : 210)
+			endif
+			
+			if iResetText==1 then
+				S1 sprintfk "colour(%d, %d, %d), text(\"\")", iGrayScale, iGrayScale, iGrayScale
+			else
+				S1 sprintfk "colour(%d, %d, %d)", iGrayScale, iGrayScale, iGrayScale
+			endif
+			
+			S2 sprintfk "note_ident%d", iCnt+1
+			chnset S1, S2
+			iCnt=iCnt+1
+			iCntRows = (iCnt%12==0 ? iCntRows+1 : iCntRows)
+
+			if iCnt%2==0 then
+				iPaint = iPaint==0 ? 1 : 0
+			endif
+			 
+		enduntil
 		
-		S2 sprintfk "note_ident%d", iCnt+1
-		chnset S1, S2
-		iCnt=iCnt+1
-		iCntRows = (iCnt%12==0 ? iCntRows+1 : iCntRows)
-	enduntil
+	elseif chnget:i("patterns")==4 then	;thrichord
+		until iCnt > 144 do
+		
+			if iCntRows%2==1 then
+				iGrayScale = (iPaint==0 ? 210 : 255)
+			else	
+				iGrayScale = (iPaint==0 ? 255 : 210)
+			endif
+			
+			if iResetText==1 then
+				S1 sprintfk "colour(%d, %d, %d), text(\"\")", iGrayScale, iGrayScale, iGrayScale
+			else
+				S1 sprintfk "colour(%d, %d, %d)", iGrayScale, iGrayScale, iGrayScale
+			endif
+			
+			S2 sprintfk "note_ident%d", iCnt+1
+			chnset S1, S2
+			iCnt=iCnt+1
+			iCntRows = (iCnt%12==0 ? iCntRows+1 : iCntRows)
+
+			if iCnt%3==0 then
+				iPaint = iPaint==0 ? 1 : 0
+			endif
+			 
+		enduntil
+		
+	elseif chnget:i("patterns")==5 then	;tetrachords
+		until iCnt > 144 do
+		
+			iGrayScale = (iPaint==0 ? 255 : 210)
+
+			
+			if iResetText==1 then
+				S1 sprintfk "colour(%d, %d, %d), text(\"\")", iGrayScale, iGrayScale, iGrayScale
+			else
+				S1 sprintfk "colour(%d, %d, %d)", iGrayScale, iGrayScale, iGrayScale
+			endif
+			
+			S2 sprintfk "note_ident%d", iCnt+1
+			chnset S1, S2
+			iCnt=iCnt+1
+			iCntRows = (iCnt%12==0 ? iCntRows+1 : iCntRows)
+
+			if iCnt%4==0 then
+				iPaint = iPaint==0 ? 1 : 0
+			endif
+			 
+		enduntil		
+
+	elseif chnget:i("patterns")==6 then	;hexachords
+		until iCnt > 144 do
+		
+			if iCntRows%2==1 then
+				iGrayScale = (iPaint==0 ? 210 : 255)
+			else	
+				iGrayScale = (iPaint==0 ? 255 : 210)
+			endif
+			
+			if iResetText==1 then
+				S1 sprintfk "colour(%d, %d, %d), text(\"\")", iGrayScale, iGrayScale, iGrayScale
+			else
+				S1 sprintfk "colour(%d, %d, %d)", iGrayScale, iGrayScale, iGrayScale
+			endif
+			
+			S2 sprintfk "note_ident%d", iCnt+1
+			chnset S1, S2
+			iCnt=iCnt+1
+			iCntRows = (iCnt%12==0 ? iCntRows+1 : iCntRows)
+
+			if iCnt%6==0 then
+				iPaint = iPaint==0 ? 1 : 0
+			endif
+			 
+		enduntil	
+		
+	endif	
+	
 endop
 
 ;---------------------------------------

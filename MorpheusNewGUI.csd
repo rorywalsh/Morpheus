@@ -1,16 +1,16 @@
 <Cabbage>
-form size(700, 555), caption(""), pluginID("plu1"), colour("white")
-
-image bounds(527, 16, 166, 318), colour(100, 100, 100)         
-;image bounds(24, 528, 647, 95), colour(200, 200, 200)               
-; 
-button bounds(536, 24, 151, 25), channel("matrixPanel"), text("Matrix"), identchannel("matrixPanel_ident"), colour:1("green"), radiogroup(99), value(1)
+form size(780, 525), caption(""), pluginID("plu1"), colour("white")
+    
+image bounds(580, 16, 190, 445), colour(100, 100, 100)         
+;image bounds(24, 528,  647, 95),  co lour(200,  200, 200)                 
+;      
+button bounds(536, 24, 151,  25), channel("matrixPanel"), text("Matrix"), identchannel("matrixPanel_ident"), colour:1("green"), radiogroup(99), value(1)
 button bounds(536, 184, 151, 25), channel("operationsPanel"), text("Operations"), identchannel("operationsPanel_ident"), colour:1("green"), radiogroup(99)
 button bounds(536, 208, 151, 25), channel("setTheoryPanel"), text("Set Theory"), identchannel("setTheoryPanel_ident"), colour:1("green"), radiogroup(99)
 button bounds(536, 232, 151, 25), channel("midiPanel"), text("Sequencer"), identchannel("midiPanel_ident"), colour:1("green"), radiogroup(99)
- 
+button bounds(536, 248, 151, 25), channel("patternsPanel"), text("Patterns"), identchannel("patternsPanel_ident"), colour:1("green"), radiogroup(99) 
 
-image bounds(539, 48, 141, 135), plant("matrixPlant"), identchannel("matrixPlant_ident") {                                          
+image bounds(603, 48, 141, 135), plant("matrixPlant"), identchannel("matrixPlant_ident") {                                          
 	button bounds(5, 5, 64, 20), channel("resetRow"), text("Clear"), popuptext("Reset matrix back to blank state")
 	button bounds(70, 5, 65, 20), channel("search"), text("Search", "Reset"), colour:1("green"), popuptext("Enable searching of matrix for a particular pattern")
 	button bounds(15, 70, 110, 20), channel("rand"), text("Random"), popuptext("Fill matrix with random values")
@@ -63,45 +63,49 @@ image bounds(539, 435, 141, 30), plant("midiPlant"), identchannel("midiPlant_ide
 	combobox bounds(80, 5, 50, 22), channel("octaveRange"), items("C1", "C2", "C3", "C4", "C5", "C6"), value(3)
 }
 
+image bounds(539, 435, 141, 30), plant("patternsPlant"), identchannel("patternsPlant_ident"){
+	combobox bounds(20, 5, 100, 22), channel("patterns"), align("left"), items("Chessboard", "Lattice", "Dyads", "Thrichords", "Tetrachords", "Hexachords"), value(2)
+}
+
 ;csoundoutput bounds(0, 500, 700, 200)
 ;plant to hold listbox for known rows. Easier to mane when it's a plant
 image bounds(37, 23, 436, 316), colour(90, 90, 90), plant("listbox"), identchannel("listbox"), visible(0), {
 	image bounds(0, 0, 436, 316), colour("black")
-	listbox bounds(2, 2, 478, 262), channel("rowListbox"), populate("*.row"), value(-1), align("left"), highlightcolour(200, 200, 0)
+	listbox bounds(2, 2, 478, 262), channel("rowListbox"), populate("*.row"), value(-1), align("left"), highlightcolour(200, 200, 0), identchannel("listbox_ident")
 }
 
 ;plant to hold array of labels for displaying our matrix.  
-image bounds(37, 23, 436, 316), colour(90, 90, 90), plant("matrix"), identchannel("matrix"), visible(1), {
-	label bounds(280, 30, 34, 24), widgetarray("note", 144), colour("white"), fontcolour("black"), text(""), corners(0), colour("black")
+image bounds(37, 23, 508, 364), colour(90, 90, 90), plant("matrix"), identchannel("matrix"), visible(1), {
+	label bounds(280, 30, 40, 28), widgetarray("note", 144), colour("white"), fontcolour("black"), text(""), corners(0), colour("black")
 }  
 
 ;plant to hold array of widgets used to display search
-groupbox bounds(15, 448, 660, 49), colour(160, 160, 160), fontcolour("black"), text("Search pattern"), plant("searchNotes"), visible(0), identchannel("searchNotesPlant"){
-	label bounds(5,   45, 38, 20), text(""), fontcolour("black"), colour("white")  widgetarray("searchnote", 12)
+groupbox bounds(40, 416, 504, 49), colour(160, 160, 160), fontcolour("black"), text("Search pattern"), plant("searchNotes"), visible(0), identchannel("searchNotesPlant"){
+	label bounds(5,   45, 32, 20), text(""), fontcolour("black"), colour("white")  widgetarray("searchnote", 12)
 }
 
 ;plant to hold array of widgets used to display inverse column names. 
-image bounds(32, 7, 490, 15), colour("white"), plant("inverseLabelsPlant"), identchannel("inverseLabels_id"){
+image bounds(32, 7, 500, 15), colour("white"), plant("inverseLabelsPlant"), identchannel("inverseLabels_id"){
 	label bounds(0, 0, 38, 15), text(""), fontstyle(0), fontcolour("black"), colour("white") widgetarray("inverseLabels", 12)
 }
 
 ;plant to hold array of widgets used to display retro inverse column names. 
-image bounds(32, 342, 490, 15), colour("white"), plant("retroInverseLabelsPlant"), identchannel("retroInverseLabels_id"){
+image bounds(32, 392, 500, 15), colour("white"), plant("retroInverseLabelsPlant"), identchannel("retroInverseLabels_id"){
 	label bounds(0, 0, 38, 15), text(""), fontstyle(0), fontcolour("black"), colour("white") widgetarray("retroInverseLabels", 12)
 }
 
 ;plant to hold array of widgets used to displayprime row names. 
-image bounds(5, 28, 30, 300), colour("white"), plant("primeLabelsPlant"),  identchannel("primeLabels_id"){
+image bounds(5, 28, 30, 400), colour("white"), plant("primeLabelsPlant"),  identchannel("primeLabels_id"){
 	label bounds(0, 0, 30, 15), text(""), fontstyle(0), fontcolour("black"), colour("white") align("right"), widgetarray("primeLabels", 12)
 }
  
 ;plant to hold array of widgets used to display retrograde row names. 
-image bounds(480, 28, 30, 300), colour("white"), plant("retroLabelsPlant"), identchannel("retroLabels_id"){
+image bounds(546, 28, 24, 400), colour("white"), plant("retroLabelsPlant"), identchannel("retroLabels_id"){
 	label bounds(0, 0, 30, 15), text(""), fontstyle(0),  fontcolour("black"), colour("white") align("left"), widgetarray("retroLabels", 12)
 }
  
 
-keyboard bounds(16, 360, 660, 79)
+keyboard bounds(591, 370, 164, 69), scrollbars(0), keywidth(23.8)
 
 ;button bounds(27, 511, 60, 25), channel("but1"), text("Push", "Push")
 </Cabbage> 
@@ -209,8 +213,8 @@ elseif chnget:i("sequencerMode")==1	then	;if instrument is in sequencer mode
 else										;if instrument is in normal mode
 
 	iGo isAlreadyThere p4 
+	
 	if iGo==0 then
-
 		iCurV = giNoteArray[0]
 		iCurH = giNoteArray[0]
 		iCnt = 1
@@ -311,7 +315,7 @@ instr 1000	;position all our numberboxes and create global arrays
 		else	
 			iGrayScale = (iCnt%2==0 ? 255 : 220)
 		endif
-		S1 sprintfk "pos(%d, %d) colour(%d, %d, %d)", iCnt%12*36+2, iCntRows*26+2, iGrayScale, iGrayScale, iGrayScale
+		S1 sprintfk "pos(%d, %d) colour(%d, %d, %d)", iCnt%12*42+2, iCntRows*30+2, iGrayScale, iGrayScale, iGrayScale
 		S2 sprintfk "note_ident%d", iCnt+1 
 		chnset S1, S2
 		S3 sprintfk "note%d", iCnt+1
@@ -336,7 +340,7 @@ instr 1000	;position all our numberboxes and create global arrays
 		
 	iCnt = 0
 	until iCnt ==12 do
-		S1 sprintfk "pos(%d, 25)", iCnt*60+10
+		S1 sprintfk "pos(%d, 25)", iCnt*41+10
 		S2 sprintfk "searchnote_ident%d", iCnt+1
 		chnset S1, S2
 		iCnt=iCnt+1
@@ -344,7 +348,7 @@ instr 1000	;position all our numberboxes and create global arrays
 	
 	iCnt = 0
 	until iCnt ==12 do
-		S1 sprintfk "pos(%d, 0)", iCnt*36+6
+		S1 sprintfk "pos(%d, 0)", iCnt*42+6
 		S2 sprintfk "inverseLabels_ident%d", iCnt+1
 		chnset S1, S2
 		iCnt=iCnt+1
@@ -352,7 +356,7 @@ instr 1000	;position all our numberboxes and create global arrays
 			
 	iCnt = 0
 	until iCnt ==12 do
-		S1 sprintfk "pos(%d, 0)", iCnt*36+6
+		S1 sprintfk "pos(%d, 0)", iCnt*42+6
 		S2 sprintfk "retroInverseLabels_ident%d", iCnt+1		
 		chnset S1, S2
 		iCnt=iCnt+1
@@ -360,7 +364,7 @@ instr 1000	;position all our numberboxes and create global arrays
 				
 	iCnt = 0
 	until iCnt ==12 do
-		S1 sprintfk "pos(0, %d)", iCnt*26
+		S1 sprintfk "pos(0, %d)", iCnt*30+2
 		S2 sprintfk "primeLabels_ident%d", iCnt+1		
 		chnset S1, S2
 		iCnt=iCnt+1
@@ -368,7 +372,7 @@ instr 1000	;position all our numberboxes and create global arrays
 				 
 	iCnt = 0
 	until iCnt ==12 do
-		S1 sprintfk "pos(0, %d)", iCnt*26
+		S1 sprintfk "pos(1, %d)", iCnt*30+2
 		S2 sprintfk "retroLabels_ident%d", iCnt+1		
 		chnset S1, S2
 		iCnt=iCnt+1
@@ -387,48 +391,71 @@ instr 1001
 	if kTrig==1 then
 		if chnget:k("operationsPanel")==1 then				;when panel 2 is enabled
 			chnset "visible(0)", "matrixPlant_ident"
-			chnset "pos(539, 75), visible(1)", "operationsPlant_ident"
+			chnset "pos(603, 75), visible(1)", "operationsPlant_ident"
 			chnset "visible(0)", "setTheoryPlant_ident"
-			chnset "pos(536, 50)", "operationsPanel_ident"
-			chnset "pos(536, 281)", "setTheoryPanel_ident"
-			chnset "pos(536, 306)", "midiPanel_ident"
+			chnset "pos(600, 50)", "operationsPanel_ident"
+			chnset "pos(600, 281)", "setTheoryPanel_ident"
+			chnset "pos(600, 306)", "midiPanel_ident"
+			chnset "pos(600, 331)", "patternsPanel_ident"
 			chnset "visible(0)", "midiPlant_ident"
+			chnset "visible(0)", "patternsPlant_ident"
+			
 			
 		elseif chnget:k("setTheoryPanel")==1 then				;when panel 3 is enabled
 			
-			chnset "pos(536, 50)", "operationsPanel_ident"
-			chnset "pos(536, 24)", "MatrixPanel_ident"
-			chnset "pos(536, 76)", "setTheoryPanel_ident"
-			chnset "pos(536, 262)", "midiPanel_ident"
+			chnset "pos(600, 50)", "operationsPanel_ident"
+			chnset "pos(600, 24)", "MatrixPanel_ident"
+			chnset "pos(600, 76)", "setTheoryPanel_ident"
+			chnset "pos(600, 262)", "midiPanel_ident"
+			chnset "pos(600, 288)", "patternsPanel_ident"
 			chnset "visible(0)", "operationsPlant_ident"
 			chnset "visible(0)", "operationsPlant_ident"
 			chnset "visible(0)", "matrixPlant_ident"
-			chnset "pos(539, 101), visible(1)", "setTheoryPlant_ident"
+			chnset "pos(603, 101), visible(1)", "setTheoryPlant_ident"
 			chnset "visible(0)", "midiPlant_ident"
+			chnset "visible(0)", "patternsPlant_ident"
 
 		elseif chnget:k("midiPanel")==1 then				;when panel 3 is enabled
 			
-			chnset "pos(536, 50)", "operationsPanel_ident"
-			chnset "pos(536, 24)", "MatrixPanel_ident"
-			chnset "pos(536, 76)", "setTheoryPanel_ident"
-			chnset "pos(536, 102)", "midiPanel_ident"
+			chnset "pos(600, 50)", "operationsPanel_ident"
+			chnset "pos(600, 24)", "MatrixPanel_ident"
+			chnset "pos(600, 76)", "setTheoryPanel_ident"
+			chnset "pos(600, 102)", "midiPanel_ident"
+			chnset "pos(600, 160)", "patternsPanel_ident"
 			
 			chnset "visible(0)", "operationsPlant_ident"
 			chnset "visible(0)", "setTheoryPlant_ident"
 			chnset "visible(0)", "matrixPlant_ident"
 			chnset "visible(0)", "setTheoryPlant_ident"
-			chnset "pos(539, 128), visible(1)", "midiPlant_ident"
+			chnset "pos(603, 128), visible(1)", "midiPlant_ident"
+			chnset "visible(0)", "patternsPlant_ident"
 
+		elseif chnget:k("patternsPanel")==1 then				;when panel 3 is enabled
+			
+			chnset "pos(600, 50)", "operationsPanel_ident"
+			chnset "pos(600, 24)", "MatrixPanel_ident"
+			chnset "pos(600, 76)", "setTheoryPanel_ident"
+			chnset "pos(600, 102)", "midiPanel_ident"
+			chnset "pos(600, 128)", "patternsPanel_ident"
+			
+			chnset "visible(0)", "operationsPlant_ident"
+			chnset "visible(0)", "setTheoryPlant_ident"
+			chnset "visible(0)", "matrixPlant_ident"
+			chnset "visible(0)", "setTheoryPlant_ident"
+			chnset "visible(0)", "midiPlant_ident"
+			chnset "pos(603, 154), visible(1)", "patternsPlant_ident"
 						
 		elseif chnget:k("matrixPanel")==1 then					;when panel 1 is enabled
-			chnset "pos(536, 24), visible(1)", "matrixPanel_ident"
-			chnset "pos(536, 184)", "operationsPanel_ident"
-			chnset "pos(536, 208)", "setTheoryPanel_ident"
-			chnset "pos(536, 232)", "midiPanel_ident"
+			chnset "pos(600, 24), visible(1)", "matrixPanel_ident"
+			chnset "pos(600, 184)", "operationsPanel_ident"
+			chnset "pos(600, 208)", "setTheoryPanel_ident"
+			chnset "pos(600, 232)", "midiPanel_ident"
+			chnset "pos(600, 254)", "patternsPanel_ident"
 			chnset "visible(0)", "setTheoryPlant_ident"
 			chnset "visible(0)", "operationsPlant_ident"
 			chnset "visible(1)", "matrixPlant_ident"
 			chnset "visible(0)", "midiPlant_ident"	
+			chnset "visible(0)", "patternsPlant_ident"
 		endif
 
 ;button bounds(536, 24, 151, 25), channel("matrixPanel"), text("Matrix"), identchannel("matrixPanel_ident"), colour:1(70, 70, 70), radiogroup(99), value(1)
@@ -547,6 +574,10 @@ instr 1001
 		event "i", "Transposition", 0, 1, -1 
 	endif
 
+	if changed:k(chnget:k("patterns"))==1 then
+		event "i", "ChangePattern", 0, 1, -1 
+	endif
+
 	gSFilename chnget "saveRow"
 	kTrig changed gSFilename
 	if kTrig==1 then
@@ -554,14 +585,19 @@ instr 1001
 	endif	
 endin
 
+;-----------------------------------------
+; change pattern
+instr ChangePattern
+resetLabelColours(0)
+endin
 ;----------------------------------------
 ;save and load presets...
 instr SavePresetFile
-SFullFileName sprintf "%s.row", gSFilename
+SFullFileName sprintf "%s", gSFilename
 
 copya2ftab giNoteArray, giGEN02SavedRowTable
 ftsave SFullFileName, 1, giGEN02SavedRowTable
-;giGEN02SavedRowTable
+chnset "refresfiles()", "listbox_ident"
 endin
 
 instr LoadPresetFile
