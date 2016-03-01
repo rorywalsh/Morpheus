@@ -1,77 +1,113 @@
 <Cabbage>
-form size(700,695), caption(""), pluginID("plu1"), colour("white")
+form size(780, 525), caption(""), pluginID("plu1"), colour("white")
+    
+image bounds(580, 16, 190, 445), colour(100, 100, 100)         
+;image bounds(24, 528,  647, 95),  co lour(200,  200, 200)                 
+;      
+button bounds(536, 24, 151,  25), channel("matrixPanel"), text("Matrix"), identchannel("matrixPanel_ident"), colour:1("green"), radiogroup(99), value(1)
+button bounds(536, 184, 151, 25), channel("operationsPanel"), text("Operations"), identchannel("operationsPanel_ident"), colour:1("green"), radiogroup(99)
+button bounds(536, 208, 151, 25), channel("setTheoryPanel"), text("Set Theory"), identchannel("setTheoryPanel_ident"), colour:1("green"), radiogroup(99)
+button bounds(536, 232, 151, 25), channel("midiPanel"), text("Sequencer"), identchannel("midiPanel_ident"), colour:1("green"), radiogroup(99)
+button bounds(536, 248, 151, 25), channel("patternsPanel"), text("Patterns"), identchannel("patternsPanel_ident"), colour:1("green"), radiogroup(99) 
 
-csoundoutput bounds(0, 500, 700, 200)
-;plant to hold listbox for known rows. Easier to mane when it's a plant
-image bounds(37, 23, 484, 268), colour(90, 90, 90), plant("listbox"), identchannel("listbox"), visible(0), {
-	listbox bounds(2, 2, 478, 262), channel("rowListbox"), file("classicRows.txt"), value(-1), align("left"), highlightcolour(200, 200, 0)
+image bounds(603, 48, 141, 135), plant("matrixPlant"), identchannel("matrixPlant_ident") {                                          
+	button bounds(5, 5, 64, 20), channel("resetRow"), text("Clear"), popuptext("Reset matrix back to blank state")
+	button bounds(70, 5, 65, 20), channel("search"), text("Search", "Reset"), colour:1("green"), popuptext("Enable searching of matrix for a particular pattern")
+	button bounds(15, 70, 110, 20), channel("rand"), text("Random"), popuptext("Fill matrix with random values")
+	label bounds(0, 27, 141, 14), text("Spelling"), fontcolour(40, 40, 40), align("centre"), fontstyle("bold italic")
+	image bounds(15, 42, 106, 2), colour(180, 180, 180)
+	button bounds(10, 45, 30, 19), channel("sharpSpelling"), text("#"), popuptext("Spell with sharps"), radiogroup(101), colour:1("green")
+	button bounds(40, 45, 30, 19), channel("flatSpelling"), text("b"), popuptext("Spell with flats"), radiogroup(101), colour:1("green")
+	button bounds(70, 45, 30, 19), channel("10Spelling"), text("10"), popuptext("Spell with numbers"), radiogroup(101), value(1), colour:1("green")
+	button bounds(100, 45, 30, 19), channel("tSpelling"), text("t"), popuptext("Spell with numbers, but use t for 10, and e for eleven"), radiogroup(101), colour:1("green")
+	;combobox bounds(22, 50, 92, 24), channel("spellingCombo"), items("Sharps", "Flats", "10", "t"), value(3), popuptext("Change harmonic spelling of notes")
+	button bounds(15, 91, 110, 19), channel("classicRows"), text("Show Presets", "Show Matrix"), value(0), popuptext("Shows a list of iconic rows used in various 12-tone compositions")
+	filebutton bounds(15, 112, 110, 19), channel("saveRow"), text("Save Row"), mode("save"), popuptext("Save current row to presets")
+	}
+
+image bounds(539, 232, 141, 205) plant("operationsPlant"), identchannel("operationsPlant_ident") {     
+	label bounds(0, 5, 141, 14) text("Permutations"), fontstyle("bold italic") fontcolour("black")
+	image bounds(15, 20, 106, 2), colour(180, 180, 180)
+	combobox bounds(22, 25, 92, 24), channel("permutationsCombo"), items("Select", "Original", "O x E", "O1 x O2", "Over 5", "Over 7","R[Tri]","R[Tetr]","R[Hex]")
+	label bounds(0, 53, 141, 14), fontstyle("bold italic"), text("Modulation"), fontcolour("black")
+	image bounds(15, 68, 106, 2), colour(180, 180, 180)
+	combobox bounds(22, 73, 92, 24), channel("modulationsCombo"), items("Select", "Original", "M5", "M7", "M11"), popuptext("Transposes each note by a set interval")
+	label bounds(0, 100, 141, 14), fontstyle("bold italic"), text("Rotation"), fontcolour("black")
+	image bounds(15, 117, 106, 2), colour(180, 180, 180)
+	button bounds(20, 121, 20, 20), channel("RotDec"), text("L"), popuptext("Rotate a row to the left")
+	button bounds(40, 121, 20, 20), channel("RotInc"), text("R"), popuptext("Rotate a row to the right")
+	button bounds(75, 121, 20, 20), channel("TransU"), text("+"), popuptext("Transpose Up")
+	button bounds(95, 121, 20, 20), channel("TransD"), text("-"), popuptext("Transpose Down")
+	checkbox bounds(15, 150, 110, 15), channel("RotMode"), fontcolour("black"), text("Stravinsky Rot."), value(0)
+	button bounds(15, 170, 110, 20), channel("norm"), text("Normalise"), popuptext("Normalises matrix - sets first note in row to 0 and scales all other notes accordingly")
+	}
+
+image bounds(539, 268, 141, 160), plant("setTheoryPlant"), identchannel("setTheoryPlant_ident"){
+	label bounds(0, 5, 141, 14), text("Interval Class"),  fontstyle("bold italic") fontcolour("black")
+	image bounds(15, 19, 106, 2), colour(180, 180, 180)
+	label bounds(5, 20, 130, 16), text("[0 0 0 0 0 0]"), fontcolour("black"), fontstyle("plain"), identchannel("intervalclass")
+	label bounds(0, 40, 141, 14), text("Prime Form"),  fontstyle("bold italic") fontcolour("black")
+	image bounds(15, 54, 106, 2), colour(180, 180, 180)
+	label bounds(5, 60, 130, 12), text(" 1 2 3 4 5 6 7 8 9 10 11"), fontcolour("black"), fontstyle("plain"), identchannel("intervalclass")
+	label bounds(0, 76, 141, 14), text("Normal Order"),  fontstyle("bold italic") fontcolour("black")
+	image bounds(15, 91, 106, 2), colour(180, 180, 180)
+	label bounds(5, 96, 130, 12), text(" 1 2 3 4 5 6 7 8 9 10 11"), fontcolour("black"), fontstyle("plain"), identchannel("intervalclass"
+	label bounds(15, 115, 100, 14), align("left"), text("Forte Num."),  fontstyle("bold italic") fontcolour("black")	
+	label bounds(90, 115, 20, 14), align("centre"), text("1"),  fontstyle("bold italic") fontcolour("white"), colour("black")	
+	label bounds(15, 135, 110, 14), align("centre"), text("Description..."),    fontstyle("italic") fontcolour("black")	
 }
 
-;plant to hold array of 
- labels for displaying our matrix.  
-image bounds(37, 23, 484, 268), colour(90, 90, 90), plant("matrix"), identchannel("matrix"), visible(1), {
-	label bounds(280, 30, 38, 20), widgetarray("note", 144), colour("white"), fontcolour("black"), text(""), corners(0), colour("black")
+
+image bounds(539, 435, 141, 30), plant("midiPlant"), identchannel("midiPlant_ident"){
+	checkbox bounds(12, 5, 80, 20), channel("sequencerMode"), fontcolour("black"), text("Enable"), value(0)
+	combobox bounds(80, 5, 50, 22), channel("octaveRange"), items("C1", "C2", "C3", "C4", "C5", "C6"), value(3)
+}
+
+image bounds(539, 435, 141, 30), plant("patternsPlant"), identchannel("patternsPlant_ident"){
+	combobox bounds(20, 5, 100, 22), channel("patterns"), align("left"), items("Chessboard", "Lattice", "Dyads", "Thrichords", "Tetrachords", "Hexachords"), value(2)
+}
+
+;csoundoutput bounds(0, 500, 700, 200)
+;plant to hold listbox for known rows. Easier to mane when it's a plant
+image bounds(37, 23, 436, 316), colour(90, 90, 90), plant("listbox"), identchannel("listbox"), visible(0), {
+	image bounds(0, 0, 436, 316), colour("black")
+	listbox bounds(2, 2, 478, 262), channel("rowListbox"), populate("*.row"), value(-1), align("left"), highlightcolour(200, 200, 0), identchannel("listbox_ident")
+}
+
+;plant to hold array of labels for displaying our matrix.  
+image bounds(37, 23, 508, 364), colour(90, 90, 90), plant("matrix"), identchannel("matrix"), visible(1), {
+	label bounds(280, 30, 40, 28), widgetarray("note", 144), colour("white"), fontcolour("black"), text(""), corners(0), colour("black")
 }  
 
 ;plant to hold array of widgets used to display search
-groupbox bounds(32, 392, 490, 60), colour(160, 160, 160), fontcolour("black"), text("Search pattern"), plant("searchNotes"), visible(0), identchannel("searchNotesPlant"){
-	label bounds(5,   30, 38, 20), text(""), fontcolour("black"), colour("white")  widgetarray("searchnote", 12)
+groupbox bounds(40, 416, 504, 49), colour(160, 160, 160), fontcolour("black"), text("Search pattern"), plant("searchNotes"), visible(0), identchannel("searchNotesPlant"){
+	label bounds(5,   45, 32, 20), text(""), fontcolour("black"), colour("white")  widgetarray("searchnote", 12)
 }
 
 ;plant to hold array of widgets used to display inverse column names. 
-image bounds(32, 7, 490, 15), colour("white"), plant("inverseLabelsPlant"), identchannel("inverseLabels_id"){
-	label bounds(0, 0, 38, 15), text(""), fontcolour("black"), colour("white") widgetarray("inverseLabels", 12)
+image bounds(32, 7, 500, 15), colour("white"), plant("inverseLabelsPlant"), identchannel("inverseLabels_id"){
+	label bounds(0, 0, 38, 15), text(""), fontstyle(0), fontcolour("black"), colour("white") widgetarray("inverseLabels", 12)
 }
 
 ;plant to hold array of widgets used to display retro inverse column names. 
-image bounds(32, 290, 490, 15), colour("white"), plant("retroInverseLabelsPlant"), identchannel("retroInverseLabels_id"){
-	label bounds(0, 0, 38, 15), text(""), fontcolour("black"), colour("white") widgetarray("retroInverseLabels", 12)
+image bounds(32, 392, 500, 15), colour("white"), plant("retroInverseLabelsPlant"), identchannel("retroInverseLabels_id"){
+	label bounds(0, 0, 38, 15), text(""), fontstyle(0), fontcolour("black"), colour("white") widgetarray("retroInverseLabels", 12)
 }
 
 ;plant to hold array of widgets used to displayprime row names. 
-image bounds(5, 28, 30, 280), colour("white"), plant("primeLabelsPlant"),  identchannel("primeLabels_id"){
-	label bounds(0, 0, 30, 15), text(""), fontcolour("black"), colour("white") align("right"), widgetarray("primeLabels", 12)
+image bounds(5, 28, 30, 400), colour("white"), plant("primeLabelsPlant"),  identchannel("primeLabels_id"){
+	label bounds(0, 0, 30, 15), text(""), fontstyle(0), fontcolour("black"), colour("white") align("right"), widgetarray("primeLabels", 12)
 }
  
 ;plant to hold array of widgets used to display retrograde row names. 
-image bounds(522, 28, 30, 280), colour("white"), plant("retroLabelsPlant"), identchannel("retroLabels_id"){
-	label bounds(0, 0, 30, 15), text(""), fontcolour("black"), colour("white") align("left"), widgetarray("retroLabels", 12)
+image bounds(546, 28, 24, 400), colour("white"), plant("retroLabelsPlant"), identchannel("retroLabels_id"){
+	label bounds(0, 0, 30, 15), text(""), fontstyle(0),  fontcolour("black"), colour("white") align("left"), widgetarray("retroLabels", 12)
 }
  
-image bounds(560, 16, 118, 285), colour(200, 200, 200)         
-image bounds(32, 304, 647, 95), colour(200, 200, 200)               
-                                           
-button bounds(576, 24, 95, 20), channel("resetRow"), text("Reset Matrix"), popuptext("Reset matrix back to blank state")
-button bounds(576, 72, 95, 20), channel("rand"), text("Randon Row"), popuptext("Fill matrix with random values")
-button bounds(576, 48, 95, 20), channel("search"), text("Search Matrix", "Reset Search"), colour:1("green"), popuptext("Enable searching of matrix for a particular pattern")
 
+keyboard bounds(591, 370, 164, 69), scrollbars(0), keywidth(23.8)
 
-
-label bounds(32, -456, 445, 14), colour("black"), visible(0), fontcolour("lime"), text(""), bold(0), identchannel("outputMessage")
-;button bounds(632, 320, 60, 25), channel("debug"), text("Debug")
-
-
-groupbox bounds(568, 120, 106, 51) text("Spelling"), fontcolour("black"), colour("White"), 
-combobox bounds(576, 144, 92, 24), channel("spellingCombo"), items("Sharps", "Flats", "10", "t"), value(3), popuptext("Change harmonic spelling of notes")
-groupbox bounds(568, 168, 106, 55) text("Permutations"), fontcolour("black"), colour("White")
-combobox bounds(576, 192, 92, 24), channel("permutationsCombo"), items("Select", "Original", "O x E", "O1 x O2", "Over 5", "Over 7","R[Tri]","R[Tetr]")
-groupbox bounds(568, 216, 106, 80) text("Modulation"), fontcolour("black"), colour("White")
-combobox bounds(576, 240, 92, 24), channel("modulationsCombo"), items("Select", "Original", "M5", "M7", "M11"), popuptext("Transposes each note by a set interval")
-button bounds(576, 96, 95, 20), channel("classicRows"), text("Classic Rows", "Show Matrix"), value(0), popuptext("Shows a list of iconic rows used in various 12-tone compositions")
-button bounds(576, 272, 95, 20), channel("norm"), text("Norm"), popuptext("Normalises matrix - sets first note in row to 0 and scales all other notes accordingly")
-keyboard bounds(40, 312, 460, 79)
-
-groupbox bounds(504, 312, 170, 51) text("Interval Class"), colour("black"), fontcolour("white"), colour("White")
-label bounds(514, 340, 151, 17), text("[0 0 0 0 0 0]"), identchannel("intervalclass")
-
-button bounds(50, 400, 20, 20), channel("RotInc"), text("R"), popuptext("Rotate a row to the right")
-button bounds(30, 400, 20, 20), channel("RotDec"), text("L"), popuptext("Rotate a row to the left")
-button bounds(50, 420, 20, 20), channel("TransU"), text("+"), popuptext("Transpose Up")
-button bounds(30, 420, 20, 20), channel("TransD"), text("-"), popuptext("Transpose Down")
-checkbox bounds(75, 400, 110, 20), channel("RotMode"), fontcolour("black"), text("Rotation Type"), value(0)
-
-checkbox bounds(504, 368, 120, 20), channel("sequencerMode"), fontcolour("black"), text("Sequencer"), value(0)
-combobox bounds(608, 368, 60, 22), channel("octaveRange"), items("C1", "C2", "C3", "C4", "C5", "C6"), value(3)
+;button bounds(27, 511, 60, 25), channel("but1"), text("Push", "Push")
 </Cabbage> 
 <CsoundSynthesizer>
 <CsOptions>
@@ -92,6 +128,9 @@ nchnls = 2
 #define Retrograde #2#
 #define Inverse #3#
 #define RetrogradeInverse #4#
+
+giGEN02RowTable init 99
+giGEN02SavedRowTable init 100
 
 gkSequencerRow init 0
 gSCSharp[] init 12
@@ -118,7 +157,7 @@ gkRILabelsTemp[] init 12
 gkRILabels[] init 12
 gkILabelsTemp[] init 12
 gkILabels[] init 12
-
+gSFilename init ""
 giDisplayMatrix[][] init 24, 24
 giNoteCount init 0;
 giNoteArray[] fillarray -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
@@ -174,8 +213,8 @@ elseif chnget:i("sequencerMode")==1	then	;if instrument is in sequencer mode
 else										;if instrument is in normal mode
 
 	iGo isAlreadyThere p4 
+	
 	if iGo==0 then
-
 		iCurV = giNoteArray[0]
 		iCurH = giNoteArray[0]
 		iCnt = 1
@@ -276,7 +315,7 @@ instr 1000	;position all our numberboxes and create global arrays
 		else	
 			iGrayScale = (iCnt%2==0 ? 255 : 220)
 		endif
-		S1 sprintfk "pos(%d, %d) colour(%d, %d, %d)", iCnt%12*40+2, iCntRows*22+2, iGrayScale, iGrayScale, iGrayScale
+		S1 sprintfk "pos(%d, %d) colour(%d, %d, %d)", iCnt%12*42+2, iCntRows*30+2, iGrayScale, iGrayScale, iGrayScale
 		S2 sprintfk "note_ident%d", iCnt+1 
 		chnset S1, S2
 		S3 sprintfk "note%d", iCnt+1
@@ -301,7 +340,7 @@ instr 1000	;position all our numberboxes and create global arrays
 		
 	iCnt = 0
 	until iCnt ==12 do
-		S1 sprintfk "pos(%d, 25)", iCnt*40+5
+		S1 sprintfk "pos(%d, 25)", iCnt*41+10
 		S2 sprintfk "searchnote_ident%d", iCnt+1
 		chnset S1, S2
 		iCnt=iCnt+1
@@ -309,7 +348,7 @@ instr 1000	;position all our numberboxes and create global arrays
 	
 	iCnt = 0
 	until iCnt ==12 do
-		S1 sprintfk "pos(%d, 0)", iCnt*40+6
+		S1 sprintfk "pos(%d, 0)", iCnt*42+6
 		S2 sprintfk "inverseLabels_ident%d", iCnt+1
 		chnset S1, S2
 		iCnt=iCnt+1
@@ -317,7 +356,7 @@ instr 1000	;position all our numberboxes and create global arrays
 			
 	iCnt = 0
 	until iCnt ==12 do
-		S1 sprintfk "pos(%d, 0)", iCnt*40+6
+		S1 sprintfk "pos(%d, 0)", iCnt*42+6
 		S2 sprintfk "retroInverseLabels_ident%d", iCnt+1		
 		chnset S1, S2
 		iCnt=iCnt+1
@@ -325,7 +364,7 @@ instr 1000	;position all our numberboxes and create global arrays
 				
 	iCnt = 0
 	until iCnt ==12 do
-		S1 sprintfk "pos(0, %d)", iCnt*22
+		S1 sprintfk "pos(0, %d)", iCnt*30+2
 		S2 sprintfk "primeLabels_ident%d", iCnt+1		
 		chnset S1, S2
 		iCnt=iCnt+1
@@ -333,7 +372,7 @@ instr 1000	;position all our numberboxes and create global arrays
 				 
 	iCnt = 0
 	until iCnt ==12 do
-		S1 sprintfk "pos(0, %d)", iCnt*22
+		S1 sprintfk "pos(1, %d)", iCnt*30+2
 		S2 sprintfk "retroLabels_ident%d", iCnt+1		
 		chnset S1, S2
 		iCnt=iCnt+1
@@ -347,7 +386,86 @@ endin
 instr 1001
 
 	kNoteCount = giNoteCount; 	cast to kRate for checking later...
-	;we don't need this running so fast, it's a waste of CPU...
+
+	kTrig changed chnget:k("matrixPanel"), chnget:k("setTheoryPanel"), chnget:k("operationsPanel"), chnget:k("midiPanel")
+	if kTrig==1 then
+		if chnget:k("operationsPanel")==1 then				;when panel 2 is enabled
+			chnset "visible(0)", "matrixPlant_ident"
+			chnset "pos(603, 75), visible(1)", "operationsPlant_ident"
+			chnset "visible(0)", "setTheoryPlant_ident"
+			chnset "pos(600, 50)", "operationsPanel_ident"
+			chnset "pos(600, 281)", "setTheoryPanel_ident"
+			chnset "pos(600, 306)", "midiPanel_ident"
+			chnset "pos(600, 331)", "patternsPanel_ident"
+			chnset "visible(0)", "midiPlant_ident"
+			chnset "visible(0)", "patternsPlant_ident"
+			
+			
+		elseif chnget:k("setTheoryPanel")==1 then				;when panel 3 is enabled
+			
+			chnset "pos(600, 50)", "operationsPanel_ident"
+			chnset "pos(600, 24)", "MatrixPanel_ident"
+			chnset "pos(600, 76)", "setTheoryPanel_ident"
+			chnset "pos(600, 262)", "midiPanel_ident"
+			chnset "pos(600, 288)", "patternsPanel_ident"
+			chnset "visible(0)", "operationsPlant_ident"
+			chnset "visible(0)", "operationsPlant_ident"
+			chnset "visible(0)", "matrixPlant_ident"
+			chnset "pos(603, 101), visible(1)", "setTheoryPlant_ident"
+			chnset "visible(0)", "midiPlant_ident"
+			chnset "visible(0)", "patternsPlant_ident"
+
+		elseif chnget:k("midiPanel")==1 then				;when panel 3 is enabled
+			
+			chnset "pos(600, 50)", "operationsPanel_ident"
+			chnset "pos(600, 24)", "MatrixPanel_ident"
+			chnset "pos(600, 76)", "setTheoryPanel_ident"
+			chnset "pos(600, 102)", "midiPanel_ident"
+			chnset "pos(600, 160)", "patternsPanel_ident"
+			
+			chnset "visible(0)", "operationsPlant_ident"
+			chnset "visible(0)", "setTheoryPlant_ident"
+			chnset "visible(0)", "matrixPlant_ident"
+			chnset "visible(0)", "setTheoryPlant_ident"
+			chnset "pos(603, 128), visible(1)", "midiPlant_ident"
+			chnset "visible(0)", "patternsPlant_ident"
+
+		elseif chnget:k("patternsPanel")==1 then				;when panel 3 is enabled
+			
+			chnset "pos(600, 50)", "operationsPanel_ident"
+			chnset "pos(600, 24)", "MatrixPanel_ident"
+			chnset "pos(600, 76)", "setTheoryPanel_ident"
+			chnset "pos(600, 102)", "midiPanel_ident"
+			chnset "pos(600, 128)", "patternsPanel_ident"
+			
+			chnset "visible(0)", "operationsPlant_ident"
+			chnset "visible(0)", "setTheoryPlant_ident"
+			chnset "visible(0)", "matrixPlant_ident"
+			chnset "visible(0)", "setTheoryPlant_ident"
+			chnset "visible(0)", "midiPlant_ident"
+			chnset "pos(603, 154), visible(1)", "patternsPlant_ident"
+						
+		elseif chnget:k("matrixPanel")==1 then					;when panel 1 is enabled
+			chnset "pos(600, 24), visible(1)", "matrixPanel_ident"
+			chnset "pos(600, 184)", "operationsPanel_ident"
+			chnset "pos(600, 208)", "setTheoryPanel_ident"
+			chnset "pos(600, 232)", "midiPanel_ident"
+			chnset "pos(600, 254)", "patternsPanel_ident"
+			chnset "visible(0)", "setTheoryPlant_ident"
+			chnset "visible(0)", "operationsPlant_ident"
+			chnset "visible(1)", "matrixPlant_ident"
+			chnset "visible(0)", "midiPlant_ident"	
+			chnset "visible(0)", "patternsPlant_ident"
+		endif
+
+;button bounds(536, 24, 151, 25), channel("matrixPanel"), text("Matrix"), identchannel("matrixPanel_ident"), colour:1(70, 70, 70), radiogroup(99), value(1)
+;button bounds(536, 184, 151, 25), channel("operationsPanel"), text("Operations"), identchannel("operationsPanel_ident"), colour:1(70, 70, 70), radiogroup(99)
+;button bounds(536, 208, 151, 25), channel("setTheoryPanel"), text("Set Theory"), identchannel("setTheoryPanel_ident"), colour:1(70, 70, 70), radiogroup(99)
+;button bounds(536, 232, 151, 25), channel("midiPanel"), text("Sequencer"), identchannel("sequencerPanel_ident"), colour:1(70, 70, 70), radiogroup(99)
+						
+	endif	
+		
+			
 	if changed:k(chnget:k("rand"))==1 then
 		if kNoteCount == 12 then	
 				scoreline {{i"DisplayNotice"  0  100  "The row is completed. Try delete some cells or reset" 5}}, 1
@@ -364,7 +482,8 @@ instr 1001
 		event "i", "DoNorm", 0, 1 	
 	endif
 
-	kReSpellNotes changed chnget:k("spellingCombo")
+	;kReSpellNotes changed chnget:k("spellingCombo")
+	kReSpellNotes changed chnget:k("sharpSpelling"), chnget:k("10Spelling"), chnget:k("flatSpelling"), chnget:k("tSpelling")
 	if kReSpellNotes == 1 then
 		event "i", "ChangeSpelling", 0, 1, 0
 	endif
@@ -435,7 +554,7 @@ instr 1001
 	endif	
 	
 	if changed:k(chnget:k("rowListbox"))==1 then
-		event "i", "RandRow", 0, 1
+		event "i", "LoadPresetFile", 0, 1
 		event "i", "ShowMatrix", 0, 1
 	endif
 	
@@ -454,8 +573,51 @@ instr 1001
 	if changed:k(chnget:k("TransD"))==1 then
 		event "i", "Transposition", 0, 1, -1 
 	endif
+
+	if changed:k(chnget:k("patterns"))==1 then
+		event "i", "ChangePattern", 0, 1, -1 
+	endif
+
+	gSFilename chnget "saveRow"
+	kTrig changed gSFilename
+	if kTrig==1 then
+		event "i", "SavePresetFile", 0, 1
+	endif	
 endin
 
+;-----------------------------------------
+; change pattern
+instr ChangePattern
+resetLabelColours(0)
+endin
+;----------------------------------------
+;save and load presets...
+instr SavePresetFile
+SFullFileName sprintf "%s", gSFilename
+
+copya2ftab giNoteArray, giGEN02SavedRowTable
+ftsave SFullFileName, 1, giGEN02SavedRowTable
+chnset "refresfiles()", "listbox_ident"
+endin
+
+instr LoadPresetFile
+	a1 init 1
+	iCnt init 0
+	SFilenames[] directory ".", ".row"
+	iNumberOfFiles lenarray SFilenames
+	printf_i "Filename = %s \n", 1, SFilenames[chnget:i("rowListbox")-1]
+	ftload SFilenames[chnget:i("rowListbox")-1], 1, giGEN02RowTable
+	
+	
+	until iCnt==12 do
+		giNoteArray[iCnt] tab_i iCnt, giGEN02RowTable
+	;rint giNoteArray[iCnt]
+		iCnt = iCnt+1
+	od
+	
+	giNoteCount = 12
+	updateMatrix(giNoteArray)
+endin
 ;----------------------------------------
 ;rotation instruments...
 instr RotationRight
@@ -484,9 +646,8 @@ instr RotationRight
 			giNoteArray[iCnt] = iTemp
 			iCnt += 1
 		od	
-	endif
+	endif	
 	
-	prints "%d %d %d", giNoteArray[0], giNoteArray[1], giNoteArray[2]	
 	updateMatrix(giNoteArray)
 
 endin
@@ -527,8 +688,6 @@ instr Transposition
 	od
 
 	updateMatrix(giNoteArray)
-
-	prints "%d %d %d", giNoteArray[0], giNoteArray[1], giNoteArray[2]
 endin
 ;----------------------------------------
 ;check for clicks on labels...
@@ -732,13 +891,12 @@ instr RandRow
 		endif
 		iCnt += 1
 	od
-;	prints "%d", iCnt_
+
 	; Fisher and Yeates' Algorithm
 	iCnt = iCnt_
 	until iCnt == 0 do
 		iGen random 0, iCnt
 		iGen = int(iGen)
-	;	iRandN[iCnt2] = iRand_[iGen] ; be fixed with giNoteArray
 		giNoteArray[giNoteCount+iCnt2] = iRand_[iGen]
 		iRand_[iGen] = -1
 		iCnt2 += 1
@@ -761,20 +919,8 @@ instr RandRow
 		
 		iCnt -= 1
 	od
-	;
-	iCnt = 0
-	iLocalNoteArray[] =  giNoteArray
-
-	while iCnt < 12 do
-	;	prints "%d ", iRandN[iCnt]
-	 	prints "%d ", iLocalNoteArray[iCnt]
-		event_i "i", 100, iCnt*.1, .1, iLocalNoteArray[iCnt]
-		iCnt += 1
-
-	od
-	prints "\n"
-	
-	;event_i "i", "CalculateMatrix", 0, .1
+	giNoteCount = 12
+	updateMatrix(giNoteArray)
 endin
 ;-------------------------------------------
 instr DoRowPermutation
@@ -849,15 +995,23 @@ instr DoRowPermutation
 			iCnt += 1
 		od
 	
+	elseif iP == 6 then
+	; 0 1 2 3 4 5 6 7 8 9 t e
+	; 5 0 1 2 3 4 e 6 7 8 9 t
+		iCnt = 0
+		until iCnt == 2 do
+			giNoteArray[iCnt*6] = giNoteArray[iCnt*6+5]
+			giNoteArray[iCnt*6+1] = iTemp[iCnt*6]
+			giNoteArray[iCnt*6+2] = iTemp[iCnt*6+1]
+			giNoteArray[iCnt*6+3] = iTemp[iCnt*6+2]
+			giNoteArray[iCnt*6+2] = iTemp[iCnt*6+1]
+			giNoteArray[iCnt*6+3] = iTemp[iCnt*6+2]
+			iCnt += 1
+		od
+	
+	
 	endif
-	iLocalNoteArray[] = giNoteArray
-	giNoteCount = 0
-	iCnt = 0
-	while iCnt < 12 do
-	 ;	prints "%d ", iLocalNoteArray[iCnt]
-		event_i "i", 100, iCnt*.01, .1, iLocalNoteArray[iCnt]
-		iCnt += 1
-	od
+	updateMatrix(giNoteArray)
 endin
 ;-------------------------------------------
 ; reset label colours
@@ -866,44 +1020,32 @@ instr CallResetLabelColours
 endin
 
 ;-------------------------------------------
-; Multiplication
+; Multiplication 27.02.16
 instr DoMatrixMultiplication	
-	iCur init 0
-	iCntV init 0
-	iCntH init 0
+	iCnt init 0
 	iM = getMX:i()
 	
-	until iCntV == giNoteCount do
-		until iCntH == giNoteCount do
-			iCur = giMatrix[iCntH][iCntV]*iM
-			iCur wrap iCur,0,12
-			giMatrix[iCntH][iCntV] = iCur
-			iCntH += 1
-		od
-		iCntH = 0
-		iCntV += 1
+	until iCnt == giNoteCount do
+		iTemp = giNoteArray[iCnt] * iM
+		iTemp wrap iTemp,0,12
+		giNoteArray[iCnt] = iTemp
+		iCnt += 1
 	od			
-	event "i", "ChangeSpelling", 0, 1, 0
+	updateMatrix(giNoteArray)
 endin
 
 ;-------------------------------------------
-; Normalization 16.02.16
+; Normalization 27.02.16
 instr DoNorm	
-	iCur init 0
-	iCntV init 0
-	iCntH init 0
-	
-	until iCntV == giNoteCount do
-		until iCntH == giNoteCount do
-			iCur = giMatrix[iCntH][iCntV] - giNoteArray[0]
-			iCur wrap iCur,0,12
-			giMatrix[iCntH][iCntV] = iCur
-			iCntH += 1
-		od
-		iCntH = 0
-		iCntV += 1
+	iCnt init 0
+	iZero = giNoteArray[0]
+	until iCnt == giNoteCount do
+		iTemp = giNoteArray[iCnt] - iZero
+		iTemp wrap iTemp,0,12
+		giNoteArray[iCnt] = iTemp
+		iCnt += 1
 	od			
-	event "i", "ChangeSpelling", 0, 1, 0
+	updateMatrix(giNoteArray)
 endin
 ;-------------------------------------------
 ; Display notification ..called whenever we need to give
@@ -1000,6 +1142,10 @@ instr SearchMatrixForRow
 endin
 </CsInstruments>  
 <CsScore>
+
+f99 0 12 -2 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+f100 0 12 -2 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+
 i1000 0 1 
 i1001 0 10000 
 i1002 0 10000
