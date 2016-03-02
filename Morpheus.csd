@@ -24,7 +24,7 @@ image bounds(603, 48, 141, 135), plant("matrixPlant"), identchannel("matrixPlant
 	button bounds(15, 91, 110, 19), channel("classicRows"), text("Show Presets", "Show Matrix"), value(0), popuptext("Shows a list of iconic rows used in various 12-tone compositions")
 	filebutton bounds(15, 112, 110, 19), channel("saveRow"), text("Save Row"), mode("save"), popuptext("Save current row to presets")
 	}
- 
+
 image bounds(539, 232, 141, 205) plant("operationsPlant"), identchannel("operationsPlant_ident") {     
 	label bounds(0, 5, 141, 14) text("Permutations"), fontstyle("bold italic") fontcolour("black")
 	image bounds(15, 20, 106, 2), colour(180, 180, 180)
@@ -378,7 +378,7 @@ instr 1000	;position all our numberboxes and create global arrays
 		iCnt=iCnt+1
 	enduntil				
 	
-	;initialiseStringArrays()			
+	initialiseStringArrays()			
 endin
 
 ;-------------------------------------------
@@ -1146,9 +1146,9 @@ endin
 f99 0 12 -2 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 f100 0 12 -2 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 
-i1000 .1 1 
-i1001 0 100000 
-i1002 0 100000
+i1000 0 1 
+i1001 0 10000   
+i1002 0 10000
 f0 z
 </CsScore>
 </CsoundSynthesizer> 
