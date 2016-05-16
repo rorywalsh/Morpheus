@@ -64,7 +64,7 @@ image bounds(539, 435, 141, 30), plant("midiPlant"), identchannel("midiPlant_ide
 }
 
 image bounds(539, 435, 141, 30), plant("patternsPlant"), identchannel("patternsPlant_ident"){
-	combobox bounds(20, 5, 100, 22), channel("patterns"), align("left"), items("Chessboard", "Lattice", "Dyads", "Thrichords", "Tetrachords", "Hexachords"), value(2)
+	combobox bounds(28, 5, 100, 22), channel("patterns"), align("left"), items("Chessboard", "Lattice", "Dyads", "Thrichords", "Tetrachords", "Hexachords"), value(2)
 }
 
 ;csoundoutput bounds(0, 500, 700, 200)
@@ -132,7 +132,7 @@ nchnls = 2
 giGEN02RowTable init 99
 giGEN02SavedRowTable init 100
 
-gkSequencerRow init 0
+gkSequencerRow init -1
 gSCSharp[] init 12
 gSCFlat[] init 12
 gSCPc[] init 12
@@ -192,6 +192,9 @@ if chnget:i("search")==1 then				;if instrument is in search mode
 elseif chnget:i("sequencerMode")==1	then	;if instrument is in sequencer mode
 		;proof of concept more than anything else...
 		iOctave = chnget:i("octaveRange");
+		
+		;if a row has not been selected set it to the default row
+		gkSequencerRow = gkSequencerRow==-1 ? 1 : gkSequencerRow
 		
 		if i(gkSequencerRow)==$Prime  then
 			iNote = giDisplayMatrix[i(gkSequencerRowColIndex)][giSequencerCount%12]+((iOctave+3)*12)
