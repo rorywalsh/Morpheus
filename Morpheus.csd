@@ -471,7 +471,9 @@ instr 1001
 			
 	if changed:k(chnget:k("rand"))==1 then
 		if kNoteCount == 12 then	
-				scoreline {{i"DisplayNotice"  0  100  "The row is completed. Try delete some cells or reset" 5}}, 1
+			;	scoreline {{i"DisplayNotice"  0  100  "The row is completed. Try delete some cells or reset" 5}}, 1
+			event "i", "ResetAll", 0, 1, 0
+			event "i", "RandRow", 0, 1
 		else
 			event "i", "RandRow", 0, 1
 		endif
@@ -562,11 +564,11 @@ instr 1001
 	endif
 	
 	if changed:k(chnget:k("RotInc"))==1 then
-		event "i", "RotationRight", 0, 1, chnget:i("RotMode") 
+		event "i", "RotationRight", 0, 1, chnget:k("RotMode") 
 	endif
 	
 	if changed:k(chnget:k("RotDec"))==1 then
-		event "i", "RotationLeft", 0, 1, chnget:i("RotMode") 
+		event "i", "RotationLeft", 0, 1, chnget:k("RotMode") 
 	endif
 	
 	if changed:k(chnget:k("TransU"))==1 then
@@ -823,6 +825,7 @@ instr ResetAll
 		iCnt=iCnt+1
 	od
 	giNoteCount=0
+	giNoteCountOld=0
 	; ----- reseting IC matrix	
 	giIC fillarray 0,0,0,0,0,0
 	SIntClass sprintf "text(\"[%d %d %d %d %d %d]\")", 0,0,0,0,0,0
@@ -880,7 +883,7 @@ instr RandRow
 	iRand[] fillarray 0,1,2,3,4,5,6,7,8,9,10,11
 	iRand_[] fillarray -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 	iRandT[] fillarray -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1	
-
+	
 	until iCnt == giNoteCount do
 		iRand[giNoteArray[iCnt]] = -1
 		iCnt += 1
